@@ -1,0 +1,80 @@
+# Code Cleanup Toolkit - Team Configuration
+# Optimized for team collaboration and consistency
+
+# General settings
+cleanup_enabled: true
+auto_fix_enabled: true
+documentation_required: true
+
+# Integration settings
+shell_script_enabled: true
+claude_code_enabled: true
+warp_terminal_enabled: true
+
+# Team-specific settings
+team:
+  enforce_standards: true
+  require_review: true
+  auto_assign_reviewers: ["@team-lead", "@senior-dev"]
+  
+# Language-specific settings (team standards)
+python:
+  use_black: true
+  use_isort: true
+  use_autoflake: true
+  use_mypy: true
+  line_length: 88
+  
+javascript:
+  use_prettier: true
+  use_eslint: true
+  config_file: ".eslintrc.team.js"
+  
+# Quality gates (team standards)
+max_file_lines: 250
+max_function_lines: 25
+require_docstrings: true
+require_type_hints: true
+min_test_coverage: 80
+
+# Code review integration
+review:
+  auto_request_review: true
+  block_merge_on_issues: true
+  require_cleanup_approval: true
+  
+# Notifications
+notifications:
+  slack_webhook: "${SLACK_WEBHOOK_URL}"
+  email_team: true
+  create_jira_ticket: false
+
+# Metrics and reporting
+metrics:
+  track_cleanup_time: true
+  measure_code_quality: true
+  generate_team_reports: true
+  
+# CI/CD integration
+ci:
+  run_on_pr: true
+  run_on_push: false
+  fail_build_on_issues: true
+  
+# Custom team rules
+team_rules:
+  - name: "No console.log in production"
+    pattern: "console\\.log"
+    severity: "error"
+    auto_fix: true
+    
+  - name: "Require JSDoc for public functions"
+    pattern: "export function \\w+\\("
+    requires: "jsdoc_comment"
+    severity: "warning"
+    
+  - name: "No TODO comments in main branch"
+    pattern: "TODO|FIXME"
+    severity: "error"
+    branches: ["main", "master", "production"]
+

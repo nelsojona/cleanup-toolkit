@@ -1,0 +1,33 @@
+# Code Cleanup Toolkit - Basic Configuration
+# This is a minimal configuration for getting started
+
+# General settings
+cleanup_enabled: true
+auto_fix_enabled: true
+documentation_required: false
+
+# Integration settings
+shell_script_enabled: true
+claude_code_enabled: false
+warp_terminal_enabled: false
+
+# Language-specific settings
+python:
+  use_black: false
+  use_isort: false
+  use_autoflake: false
+  
+javascript:
+  use_prettier: false
+  use_eslint: false
+
+# Quality checks (relaxed for basic setup)
+max_file_lines: 1000
+max_function_lines: 100
+require_docstrings: false
+
+# Pre-commit settings
+fail_on_warnings: false
+generate_reports: true
+update_handover: false
+

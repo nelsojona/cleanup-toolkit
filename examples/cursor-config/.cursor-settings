@@ -1,0 +1,54 @@
+{
+  "cleanup-toolkit": {
+    "enabled": true,
+    "auto_prompt_on_commit": true,
+    "preferred_ai_model": "gpt-4",
+    "cleanup_standards": {
+      "require_docstrings": true,
+      "require_type_hints": true,
+      "max_function_length": 50,
+      "consolidate_duplicates": true,
+      "remove_debug_statements": true,
+      "improve_error_handling": true
+    }
+  },
+  "ai": {
+    "context_files": [
+      ".cleanup-toolkit/cleanup-context.md",
+      ".cleanup-toolkit/cleanup-summary.md",
+      ".cleanup-toolkit/cursor-prompts.txt"
+    ],
+    "default_prompts": {
+      "cleanup_analysis": "Analyze this code for cleanup opportunities: remove bloat, consolidate logic, document clearly",
+      "documentation": "Add comprehensive documentation: clear purpose, parameters, return values, exceptions",
+      "consolidation": "Consolidate duplicate functions into a single, well-designed function"
+    }
+  },
+  "commands": [
+    {
+      "name": "Systematic Cleanup Analysis",
+      "command": "cursor.ai.chat",
+      "prompt": "Analyze this code for cleanup opportunities: remove bloat, consolidate logic, document clearly"
+    },
+    {
+      "name": "Generate Cleanup Documentation",
+      "command": "cursor.ai.inline",
+      "prompt": "Add comprehensive documentation with clear purpose, parameters, return values, and exceptions"
+    },
+    {
+      "name": "Consolidate Duplicate Functions",
+      "command": "cursor.ai.inline",
+      "prompt": "Consolidate these duplicate functions into a single, well-designed function"
+    },
+    {
+      "name": "Remove Debug Statements",
+      "command": "cursor.ai.inline",
+      "prompt": "Remove debug statements and console logs, comment them out for review"
+    },
+    {
+      "name": "Improve Error Handling",
+      "command": "cursor.ai.inline",
+      "prompt": "Add comprehensive error handling with specific error messages and proper exception types"
+    }
+  ]
+}

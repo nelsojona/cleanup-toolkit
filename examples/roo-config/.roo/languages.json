@@ -1,0 +1,156 @@
+{
+  "languages": {
+    "python": {
+      "enabled": true,
+      "cleanup_rules": {
+        "use_type_hints": true,
+        "pep8_compliance": true,
+        "docstring_style": "google",
+        "import_organization": "isort",
+        "max_line_length": 88,
+        "use_f_strings": true,
+        "remove_print_statements": true,
+        "async_await_patterns": true
+      },
+      "quality_checks": {
+        "pylint": true,
+        "mypy": true,
+        "black": true,
+        "isort": true
+      }
+    },
+    
+    "javascript": {
+      "enabled": true,
+      "cleanup_rules": {
+        "use_jsdoc": true,
+        "modern_syntax": true,
+        "error_handling": "async_await",
+        "import_style": "es6",
+        "prefer_const": true,
+        "arrow_functions": true,
+        "template_literals": true,
+        "remove_console_log": true,
+        "destructuring": true
+      },
+      "quality_checks": {
+        "eslint": true,
+        "prettier": true
+      }
+    },
+    
+    "typescript": {
+      "enabled": true,
+      "cleanup_rules": {
+        "strict_types": true,
+        "interface_documentation": true,
+        "generic_optimization": true,
+        "no_any": true,
+        "prefer_interfaces": true,
+        "readonly_properties": true,
+        "optional_chaining": true,
+        "nullish_coalescing": true
+      },
+      "quality_checks": {
+        "tslint": true,
+        "prettier": true,
+        "strict_mode": true
+      }
+    },
+    
+    "java": {
+      "enabled": true,
+      "cleanup_rules": {
+        "javadoc_comments": true,
+        "final_variables": true,
+        "optional_usage": true,
+        "stream_api": true,
+        "lombok_annotations": false,
+        "null_checks": true,
+        "exception_handling": "specific",
+        "naming_conventions": "camelCase"
+      },
+      "quality_checks": {
+        "checkstyle": true,
+        "spotbugs": true,
+        "pmd": true
+      }
+    },
+    
+    "go": {
+      "enabled": true,
+      "cleanup_rules": {
+        "godoc_comments": true,
+        "error_handling": "explicit",
+        "defer_usage": true,
+        "context_usage": true,
+        "interface_patterns": true,
+        "remove_fmt_println": true,
+        "naming_conventions": "go_style"
+      },
+      "quality_checks": {
+        "go_fmt": true,
+        "go_lint": true,
+        "go_vet": true
+      }
+    },
+    
+    "rust": {
+      "enabled": true,
+      "cleanup_rules": {
+        "doc_comments": true,
+        "result_handling": true,
+        "ownership_patterns": true,
+        "derive_traits": true,
+        "clippy_suggestions": true,
+        "remove_println": true,
+        "naming_conventions": "snake_case"
+      },
+      "quality_checks": {
+        "rustfmt": true,
+        "clippy": true
+      }
+    },
+    
+    "ruby": {
+      "enabled": true,
+      "cleanup_rules": {
+        "yard_documentation": true,
+        "rubocop_style": true,
+        "safe_navigation": true,
+        "frozen_string_literal": true,
+        "remove_puts": true,
+        "naming_conventions": "snake_case"
+      },
+      "quality_checks": {
+        "rubocop": true,
+        "reek": true
+      }
+    },
+    
+    "php": {
+      "enabled": true,
+      "cleanup_rules": {
+        "phpdoc_comments": true,
+        "type_declarations": true,
+        "strict_types": true,
+        "null_safe_operator": true,
+        "remove_var_dump": true,
+        "psr_standards": true,
+        "naming_conventions": "camelCase"
+      },
+      "quality_checks": {
+        "phpcs": true,
+        "phpstan": true
+      }
+    }
+  },
+  
+  "global_settings": {
+    "auto_detect_language": true,
+    "respect_editorconfig": true,
+    "preserve_formatting": false,
+    "backup_before_cleanup": true,
+    "incremental_cleanup": true
+  }
+}
