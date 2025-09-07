@@ -18,7 +18,11 @@ Integrate systematic code cleanup workflows with **Roo Code**, the AI-powered de
 ### 1. Install Cleanup Toolkit
 ```bash
 # In your Roo Code project
+<<<<<<< HEAD
 curl -sSL https://raw.githubusercontent.com/nelsojona/cleanup-toolkit/main/install.sh | bash
+=======
+curl -sSL https://raw.githubusercontent.com/your-username/cleanup-toolkit/main/install.sh | bash
+>>>>>>> 388143a4b6e8ac4359e4f64cb05f808b9f4718a0
 ```
 
 ### 2. Configure for Roo Code
@@ -478,7 +482,11 @@ grep "roo_code_integration" .cleanup-toolkit/config.yml
 ## 📖 Additional Resources
 
 - [Roo Code Documentation](https://roo.dev/docs)
+<<<<<<< HEAD
 - [Cleanup Toolkit Repository](https://github.com/nelsojona/cleanup-toolkit)
+=======
+- [Cleanup Toolkit Repository](https://github.com/your-username/cleanup-toolkit)
+>>>>>>> 388143a4b6e8ac4359e4f64cb05f808b9f4718a0
 - [Roo AI Best Practices](https://roo.dev/docs/ai-best-practices)
 
 ---

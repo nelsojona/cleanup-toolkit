@@ -18,7 +18,11 @@ Integrate systematic code cleanup workflow with **Cursor**, the AI-powered code 
 ### 1. Install Cleanup Toolkit
 ```bash
 # In your project directory
+<<<<<<< HEAD
 curl -sSL https://raw.githubusercontent.com/nelsojona/cleanup-toolkit/main/install.sh | bash
+=======
+curl -sSL https://raw.githubusercontent.com/your-username/cleanup-toolkit/main/install.sh | bash
+>>>>>>> 388143a4b6e8ac4359e4f64cb05f808b9f4718a0
 ```
 
 ### 2. Configure for Cursor
@@ -362,7 +366,11 @@ cat .cursor-settings
 ## 📖 Additional Resources
 
 - [Cursor Documentation](https://cursor.sh/docs)
+<<<<<<< HEAD
 - [Cleanup Toolkit Main Repository](https://github.com/nelsojona/cleanup-toolkit)
+=======
+- [Cleanup Toolkit Main Repository](https://github.com/your-username/cleanup-toolkit)
+>>>>>>> 388143a4b6e8ac4359e4f64cb05f808b9f4718a0
 - [Cursor AI Best Practices](https://cursor.sh/docs/ai-best-practices)
 
 ---

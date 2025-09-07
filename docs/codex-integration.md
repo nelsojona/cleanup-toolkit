@@ -18,7 +18,11 @@ Integrate systematic code cleanup workflow with **OpenAI Codex**, leveraging its
 ### 1. Install Cleanup Toolkit
 ```bash
 # In your project directory
+<<<<<<< HEAD
 curl -sSL https://raw.githubusercontent.com/nelsojona/cleanup-toolkit/main/install.sh | bash
+=======
+curl -sSL https://raw.githubusercontent.com/your-username/cleanup-toolkit/main/install.sh | bash
+>>>>>>> 388143a4b6e8ac4359e4f64cb05f808b9f4718a0
 ```
 
 ### 2. Configure OpenAI API
@@ -813,7 +817,11 @@ def validate_codex_output(original, cleaned):
 ## 📖 Additional Resources
 
 - [OpenAI Codex Documentation](https://platform.openai.com/docs/guides/code)
+<<<<<<< HEAD
 - [Cleanup Toolkit Repository](https://github.com/nelsojona/cleanup-toolkit)
+=======
+- [Cleanup Toolkit Repository](https://github.com/your-username/cleanup-toolkit)
+>>>>>>> 388143a4b6e8ac4359e4f64cb05f808b9f4718a0
 - [OpenAI API Reference](https://platform.openai.com/docs/api-reference)
 - [Codex Best Practices](https://platform.openai.com/docs/guides/code/best-practices)
 
