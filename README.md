@@ -64,6 +64,24 @@ graph TD
 
 ## 🤖 AI Framework Support
 
+### 🎨 Cursor (NEW!)
+AI-powered code editor with intelligent cleanup capabilities.
+
+```bash
+# After pre-commit hook triggers:
+# 1. Open files in Cursor
+# 2. Use Cmd+L for comprehensive analysis
+# 3. Use Cmd+K for targeted fixes
+```
+
+**Features:**
+- AI-powered context understanding
+- Inline and chat-based cleanup
+- Multi-file editing capabilities
+- Custom cleanup commands
+
+[📖 Full Cursor Integration Guide](docs/cursor-integration.md)
+
 ### 🧠 Claude Code (Recommended)
 Perfect for comprehensive project understanding and systematic cleanup.
 
@@ -104,6 +122,11 @@ Manual cleanup with guided instructions for any environment.
 cat .cleanup-toolkit/shell-cleanup-guide.md
 ```
 
+### 🚀 More Integrations
+- **VS Code**: Coming soon
+- **IntelliJ IDEA**: Coming soon
+- **Sublime Text**: Coming soon
+
 ## 📦 What's Included
 
 ### 🪝 **Smart Pre-commit Hook**
@@ -113,6 +136,7 @@ cat .cleanup-toolkit/shell-cleanup-guide.md
 - Provides fallback manual guidance
 
 ### 🤖 **AI Framework Integration**
+- **Cursor**: AI-powered editor with inline cleanup
 - **Claude Code**: Project context + systematic prompts
 - **Warp Terminal**: Real-time AI + custom workflows  
 - **Shell Scripts**: Manual guidance + checklists
@@ -297,6 +321,7 @@ git commit --no-verify -m "emergency fix"
 ## 📖 Documentation
 
 - [Quick Start Guide](docs/quick-start.md)
+- [Cursor Integration Guide](docs/cursor-integration.md)
 - [Claude Code Integration](claude-code/agentic-prompts.md)
 - [Warp Terminal Workflows](warp-terminal/agentic-workflows.md)
 - [Configuration Reference](docs/configuration.md)
