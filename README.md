@@ -1,10 +1,10 @@
 # Cleanup Toolkit
 
-An **AI-powered code cleanup toolkit** that transforms "vibe-coding" "into systematic, intelligent cleanup workflows. Instead of rigid programmatic cleanup, this toolkit **prompts AI frameworks** to perform context-aware code improvement.
+An **AI-powered code cleanup toolkit** that transforms "vibe-coding" into systematic, intelligent cleanup workflows. Instead of rigid programmatic cleanup, this toolkit **prompts AI frameworks** to perform context-aware code improvement.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/nelsojona/cleanup-toolkit)
-[![AI-Powered](https://img.shields.io/badge/AI--Powered-Claude%20%7C%20Warp-purple.svg)](https://github.com/nelsojona/cleanup-toolkit)
+[![AI-Powered](https://img.shields.io/badge/AI--Powered-Claude%20%7C%20Cursor%20%7C%20Roo%20%7C%20Codex%20%7C%20Warp-purple.svg)](https://github.com/nelsojona/cleanup-toolkit)
 
 ## 🤖 The Agentic Approach
 
@@ -20,18 +20,28 @@ The AI frameworks do the actual cleanup work, understanding your code's purpose 
 ## 🚀 Quick Start
 
 ```bash
-# Install in your project
-curl -sSL https://raw.githubusercontent.com/nelsojona/cleanup-toolkit/main/install.sh | bash
-
-# Or manual install
+# Clone the toolkit
 git clone https://github.com/nelsojona/cleanup-toolkit.git
+
+# Install in your project (from project root)
 cd your-project
 bash /path/to/cleanup-toolkit/install.sh
+
+# The installer will:
+# 1. Create .cleanup-toolkit/ directory
+# 2. Install pre-commit hook
+# 3. Copy configuration templates
+# 4. Set up AI framework integrations
 
 # Start coding - cleanup happens automatically on commit!
 git add .
 git commit -m "feat: implement new feature"
 # 🎉 AI cleanup prompts are generated automatically
+```
+
+### Quick Install (One-liner)
+```bash
+curl -sSL https://raw.githubusercontent.com/nelsojona/cleanup-toolkit/main/install.sh | bash
 ```
 
 ## 🎯 How It Works
@@ -51,15 +61,26 @@ git commit -m "feat: implement new feature"
 graph TD
     A[Complete Development] --> B[Git Commit]
     B --> C[Pre-commit Hook Triggers]
-    C --> D[Generate AI Context]
-    D --> E{Choose AI Framework}
-    E -->|Claude Code| F[Systematic Cleanup Prompts]
-    E -->|Warp Terminal| G[Real-time AI Guidance]
-    E -->|Manual| H[Guided Instructions]
-    F --> I[AI Performs Cleanup]
-    G --> I
-    H --> I
-    I --> J[Verify & Complete]
+    C --> D[Analyze Code Changes]
+    D --> E[Generate AI Context & Prompts]
+    E --> F{Choose AI Framework}
+    F -->|Claude Code| G[Systematic Cleanup Prompts]
+    F -->|Cursor| H[Inline AI Cleanup]
+    F -->|Roo Code| I[Interactive Guidance]
+    F -->|Codex| J[Automated Analysis]
+    F -->|Warp Terminal| K[Real-time AI Assistance]
+    F -->|Manual| L[Shell Script Guidance]
+    G --> M[AI Performs Cleanup]
+    H --> M
+    I --> M
+    J --> M
+    K --> M
+    L --> M
+    M --> N[Verify Results]
+    N --> O{Pass Quality Gates?}
+    O -->|Yes| P[Complete Commit]
+    O -->|No| Q[Iterate Cleanup]
+    Q --> F
 ```
 
 ## 🤖 AI Framework Support
@@ -165,53 +186,96 @@ cat .cleanup-toolkit/shell-cleanup-guide.md
 
 ## 📦 What's Included
 
-### 🪝 **Smart Pre-commit Hook**
-- Analyzes code changes intelligently
-- Generates AI-specific prompts and context
-- Integrates with multiple AI frameworks
-- Provides fallback manual guidance
+### Core Components
 
-### 🤖 **AI Framework Integration**
-- **OpenAI Codex**: Deep code understanding + generation
-- **Roo Code**: Deep project understanding + interactive guidance
-- **Cursor**: AI-powered editor with inline cleanup
-- **Claude Code**: Project context + systematic prompts
-- **Warp Terminal**: Real-time AI + custom workflows  
-- **Shell Scripts**: Manual guidance + checklists
+#### 🪝 **Smart Pre-commit Hook** (`hooks/pre-commit`)
+- Analyzes git staged changes using `git diff --cached`
+- Detects code quality issues (debug statements, TODOs, unused imports)
+- Generates AI-specific prompts for each framework
+- Creates contextual cleanup guidance
+- Supports skip conditions (`SKIP_CLEANUP`, `--no-verify`)
 
-### ⚙️ **Flexible Configuration**
-- Framework preferences and settings
-- Project-specific cleanup standards
-- Team collaboration features
-- CI/CD integration ready
+#### 🧹 **Code Cleanup Script** (`scripts/code_cleanup_gist.sh`)
+- Standalone cleanup analysis tool
+- Language-specific pattern detection
+- Quality metrics generation
+- Manual cleanup workflow support
 
-### 📚 **Examples & Templates**
-- Sample messy code for testing
-- Configuration templates (basic, advanced, team)
-- Real-world usage examples
-- Best practices documentation
+#### ⚙️ **Configuration System**
+- YAML-based configuration (`config.yml`)
+- Per-project settings (`.cleanup-toolkit/`)
+- Framework-specific configurations
+- Team collaboration templates
+
+### AI Framework Integrations
+
+#### 📁 **Framework-Specific Configs**
+- `claude-code/`: Claude Code prompts and workflows
+- `cursor-config/`: Cursor settings and cleanup prompts
+- `codex-config/`: OpenAI Codex scripts and prompts
+- `roo-config/`: Roo Code workflows and templates
+- `warp-terminal/`: Warp AI workflows and guides
+
+#### 📚 **Example Projects**
+- `examples/python-project/`: Python cleanup examples
+- `examples/javascript-project/`: JS/TS cleanup examples
+- `examples/config-templates/`: Basic and advanced configs
+- `examples/team-setup/`: Team collaboration setup
+
+### Testing & Quality
+- `tests/`: Comprehensive test suite
+  - Unit, integration, E2E, performance, security tests
+  - Test fixtures for various scenarios
 
 ## 🔧 Installation & Setup
 
-### One-Line Install
+### Prerequisites
+- Git repository initialized in your project
+- Bash shell (macOS, Linux, WSL on Windows)
+- One or more AI frameworks installed (Claude Code, Cursor, etc.)
+
+### Installation Methods
+
+#### Method 1: Quick Install
 ```bash
 curl -sSL https://raw.githubusercontent.com/nelsojona/cleanup-toolkit/main/install.sh | bash
 ```
 
-### Manual Install
+#### Method 2: Manual Install
 ```bash
+# Clone the toolkit
 git clone https://github.com/nelsojona/cleanup-toolkit.git
+
+# Navigate to your project
 cd your-project
+
+# Run the installer
 bash /path/to/cleanup-toolkit/install.sh
+```
+
+### What Gets Installed
+```
+your-project/
+├── .cleanup-toolkit/          # Toolkit configuration directory
+│   ├── config.yml            # Your project configuration
+│   ├── claude-prompts.txt    # Generated Claude Code prompts
+│   ├── warp-ai-prompts.txt   # Generated Warp prompts
+│   └── cleanup-report.md     # Cleanup analysis reports
+├── .git/hooks/
+│   └── pre-commit            # Smart pre-commit hook
+└── claude.md (optional)      # Claude Code context file
 ```
 
 ### Verify Installation
 ```bash
-# Test with a messy file
+# Check hook installation
+ls -la .git/hooks/pre-commit
+
+# Test with a sample commit
 echo "print('debug statement')" > test.py
 git add test.py
 git commit -m "test: cleanup toolkit"
-# Should generate AI prompts and pause commit
+# Should trigger cleanup analysis and generate AI prompts
 ```
 
 ## 📊 What Gets Cleaned
@@ -296,31 +360,84 @@ def process_user(name: str, email: str) -> bool:
 ### Basic Configuration
 ```yaml
 # .cleanup-toolkit/config.yml
+# General settings
+cleanup_enabled: true
+auto_fix_enabled: true
+documentation_required: false
+
+# Integration settings
+preferred_framework: "claude-code"  # Options: claude-code, cursor, roo-code, codex, warp-terminal, shell
+shell_script_enabled: true
+claude_code_enabled: true
+warp_terminal_enabled: false
+
+# Language-specific settings
+python:
+  use_black: false
+  use_isort: false
+  use_autoflake: false
+  
+javascript:
+  use_prettier: false
+  use_eslint: false
+
+# Quality checks
+max_file_lines: 1000
+max_function_lines: 100
+require_docstrings: false
+
+# Pre-commit settings
+fail_on_warnings: false
+generate_reports: true
+update_handover: false
+```
+
+### Advanced Configuration
+```yaml
+# Advanced team configuration
 cleanup_mode: "agentic"
-preferred_framework: "claude-code"  # or "warp-terminal"
+preferred_framework: "claude-code"
 auto_generate_prompts: true
 
+# Framework-specific settings
 claude_code:
   update_handover: true
   generate_context: true
+  systematic_workflow: true
+
+cursor:
+  inline_cleanup: true
+  use_cmd_k: true
+  use_cmd_l: true
+
+roo_code:
+  interactive_mode: true
+  full_context: true
+
+codex:
+  api_key: "${OPENAI_API_KEY}"
+  model: "code-davinci-002"
+  temperature: 0.2
 
 warp_terminal:
   enable_workflows: true
   create_ai_context: true
-```
+  use_cmd_g: true
 
-### Team Configuration
-```yaml
-# Team-specific settings
+# Quality gates
+quality_gates:
+  max_file_lines: 250
+  max_function_lines: 50
+  max_complexity: 10
+  require_docstrings: true
+  min_test_coverage: 80
+
+# Team collaboration
 team:
   enforce_standards: true
   require_review: true
   shared_prompts: true
-
-quality_gates:
-  max_file_lines: 250
-  require_docstrings: true
-  min_test_coverage: 80
+  central_config_repo: "https://github.com/team/cleanup-standards"
 ```
 
 ## 🔍 Troubleshooting
@@ -358,15 +475,26 @@ git commit --no-verify -m "emergency fix"
 
 ## 📖 Documentation
 
+### Core Documentation
 - [Quick Start Guide](docs/quick-start.md)
+- [Configuration Reference](docs/configuration.md)
+- [Contributing Guidelines](CONTRIBUTING.md)
+
+### AI Framework Guides
 - [OpenAI Codex Integration](docs/codex-integration.md)
 - [Roo Code Integration Guide](docs/roo-code-integration.md)
 - [Cursor Integration Guide](docs/cursor-integration.md)
 - [Claude Code Integration](claude-code/agentic-prompts.md)
 - [Warp Terminal Workflows](warp-terminal/agentic-workflows.md)
-- [Configuration Reference](docs/configuration.md)
+
+### Examples & Templates
+- [Python Project Example](examples/python-project/)
+- [JavaScript Project Example](examples/javascript-project/)
+- [Cursor Configuration](examples/cursor-config/)
+- [Codex Configuration](examples/codex-config/)
+- [Roo Configuration](examples/roo-config/)
 - [Team Setup Guide](examples/team-setup/)
-- [Contributing Guidelines](CONTRIBUTING.md)
+- [Configuration Templates](examples/config-templates/)
 
 ## 🤝 Contributing
 
