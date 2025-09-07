@@ -1,0 +1,473 @@
+#!/bin/bash
+
+# Matt Shumer Code Cleanup Toolkit - Agentic Pre-commit Hook
+# Prompts AI frameworks to perform cleanup instead of doing programmatic cleanup
+# "After successfully completing your goal, ask: 'Please clean up the code you worked on, remove any bloat you added, and document it very clearly.'"
+
+set -e
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+NC='\033[0m' # No Color
+
+# Configuration
+TOOLKIT_DIR="$(git rev-parse --show-toplevel)/.cleanup-toolkit"
+CONFIG_FILE="$TOOLKIT_DIR/config.yml"
+CLEANUP_MODE="${CLEANUP_MODE:-prompt}"
+SKIP_CLEANUP="${SKIP_CLEANUP:-false}"
+
+print_header() {
+    echo -e "${BLUE}╔══════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${BLUE}║${NC}  ${PURPLE}Matt Shumer Agentic Cleanup Toolkit${NC} - Pre-commit Hook   ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}  ${GREEN}Prompting AI frameworks for systematic cleanup${NC}           ${BLUE}║${NC}"
+    echo -e "${BLUE}╚══════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+}
+
+print_step() {
+    echo -e "${GREEN}[✓]${NC} $1"
+}
+
+print_prompt() {
+    echo -e "${PURPLE}[🤖]${NC} $1"
+}
+
+print_info() {
+    echo -e "${BLUE}[ℹ]${NC} $1"
+}
+
+print_warning() {
+    echo -e "${YELLOW}[⚠]${NC} $1"
+}
+
+# Check if cleanup should be skipped
+check_skip_conditions() {
+    if [ "$SKIP_CLEANUP" = "true" ]; then
+        print_warning "Cleanup skipped via SKIP_CLEANUP environment variable"
+        exit 0
+    fi
+    
+    if [ -f ".git/COMMIT_EDITMSG" ] && grep -q "SKIP_CLEANUP\|NO_CLEANUP" ".git/COMMIT_EDITMSG"; then
+        print_warning "Cleanup skipped due to marker in commit message"
+        exit 0
+    fi
+}
+
+# Get list of staged files
+get_staged_files() {
+    git diff --cached --name-only --diff-filter=ACM
+}
+
+# Generate context for AI frameworks
+generate_cleanup_context() {
+    local staged_files=$(get_staged_files)
+    local project_name=$(basename "$(git rev-parse --show-toplevel)")
+    local current_branch=$(git branch --show-current)
+    local commit_message=$(cat .git/COMMIT_EDITMSG 2>/dev/null | head -1 || echo "")
+    
+    cat > "$TOOLKIT_DIR/cleanup-context.md" << EOF
+# Cleanup Context - $(date)
+
+## Project Information
+- **Project**: $project_name
+- **Branch**: $current_branch
+- **Commit Message**: $commit_message
+
+## Files Modified in This Commit
+$(echo "$staged_files" | sed 's/^/- /')
+
+## Matt Shumer's Cleanup Request
+"Please clean up the code you worked on, remove any bloat you added, and document it very clearly."
+
+## Specific Areas to Focus On
+1. **Remove Bloat**: Debug statements, unused imports, dead code
+2. **Consolidate Logic**: Duplicate functions, repeated patterns
+3. **Document Clearly**: Add comprehensive docstrings and comments
+4. **Improve Quality**: Error handling, type hints, validation
+
+## Files Requiring Attention
+$(echo "$staged_files" | while read -r file; do
+    if [ -f "$file" ]; then
+        echo "### $file"
+        
+        # Check for debug statements
+        if grep -q "print(\|console\.log\|System\.out" "$file" 2>/dev/null; then
+            echo "- ⚠️ Contains debug statements"
+        fi
+        
+        # Check for TODO/FIXME
+        if grep -q "TODO\|FIXME\|XXX\|HACK" "$file" 2>/dev/null; then
+            echo "- ⚠️ Contains TODO/FIXME comments"
+        fi
+        
+        # Check file size
+        local lines=$(wc -l < "$file" 2>/dev/null || echo 0)
+        if [ "$lines" -gt 200 ]; then
+            echo "- ⚠️ Large file ($lines lines) - consider refactoring"
+        fi
+        
+        echo ""
+    fi
+done)
+
+## Next Steps
+The AI framework should systematically review each file and apply cleanup according to the standards above.
+EOF
+
+    print_step "Generated cleanup context at $TOOLKIT_DIR/cleanup-context.md"
+}
+
+# Generate Claude Code prompts
+generate_claude_code_prompts() {
+    if [ ! -f "claude.md" ] && [ ! -f "handover.md" ]; then
+        print_info "Claude Code project files not detected"
+        return 0
+    fi
+    
+    print_step "Generating Claude Code prompts..."
+    
+    # Update handover.md with pre-commit status
+    if [ -f "handover.md" ]; then
+        cat >> handover.md << EOF
+
+## Pre-commit Cleanup Request - $(date +%Y-%m-%d %H:%M)
+**Matt Shumer's Cleanup Goal**: "Please clean up the code you worked on, remove any bloat you added, and document it very clearly."
+
+### Files Modified in This Commit:
+$(get_staged_files | sed 's/^/- /')
+
+### Cleanup Tasks:
+- [ ] Review each modified file for debug statements
+- [ ] Remove unused imports and variables
+- [ ] Consolidate duplicate functions
+- [ ] Add comprehensive documentation
+- [ ] Improve error handling
+- [ ] Verify all functionality is preserved
+
+### Claude Code Instructions:
+1. Read the cleanup context: \`cat .cleanup-toolkit/cleanup-context.md\`
+2. Review each modified file systematically
+3. Apply Matt Shumer's cleanup principles
+4. Update this handover.md with progress
+5. Generate a cleanup summary
+
+EOF
+        git add handover.md
+    fi
+    
+    # Generate specific Claude Code prompts
+    cat > "$TOOLKIT_DIR/claude-prompts.txt" << 'EOF'
+# Claude Code Prompts for Pre-commit Cleanup
+
+## Initial Analysis Prompt
+```
+I just completed a development goal and I'm ready for systematic cleanup following Matt Shumer's advice: "Please clean up the code you worked on, remove any bloat you added, and document it very clearly."
+
+Please read:
+1. claude.md (project context)
+2. handover.md (current tasks and the new cleanup request)
+3. .cleanup-toolkit/cleanup-context.md (specific files and issues)
+
+Then analyze the modified files and create a systematic cleanup plan.
+```
+
+## Systematic Cleanup Prompt
+```
+Now please execute the cleanup plan systematically:
+
+1. Review each file listed in the cleanup context
+2. Remove bloat: debug statements, unused imports, dead code
+3. Consolidate duplicate logic and functions
+4. Add clear documentation with proper docstrings
+5. Improve error handling and validation
+6. Ensure all changes preserve functionality
+
+Follow our project standards from claude.md and update handover.md with your progress.
+```
+
+## Verification Prompt
+```
+Please verify the cleanup is complete:
+
+1. Check that all files have been properly cleaned
+2. Ensure no functionality was broken
+3. Confirm documentation is comprehensive
+4. Update handover.md with completion status
+5. Provide a summary of changes made
+
+Generate a final cleanup report following Matt Shumer's standards.
+```
+EOF
+
+    print_prompt "Claude Code prompts generated at $TOOLKIT_DIR/claude-prompts.txt"
+    print_info "💡 Next: Use these prompts in Claude Code to perform systematic cleanup"
+}
+
+# Generate Warp Terminal AI prompts
+generate_warp_prompts() {
+    if [ ! -d ".warp" ]; then
+        print_info "Warp Terminal configuration not detected"
+        return 0
+    fi
+    
+    print_step "Generating Warp Terminal AI prompts..."
+    
+    # Create Warp AI context file
+    cat > "$TOOLKIT_DIR/warp-ai-context.md" << EOF
+# Warp AI Context for Pre-commit Cleanup
+
+## Current Situation
+Just completed a development goal and ready for Matt Shumer's cleanup process:
+"Please clean up the code you worked on, remove any bloat you added, and document it very clearly."
+
+## Project Context
+- Project: $(basename "$(git rev-parse --show-toplevel)")
+- Branch: $(git branch --show-current)
+- Modified files: $(get_staged_files | wc -l) files
+
+## Files to Clean
+$(get_staged_files | sed 's/^/- /')
+
+## Warp AI Instructions
+Use Cmd+G (or Ctrl+G) in Warp Terminal with these prompts for systematic cleanup.
+EOF
+
+    # Generate Warp AI prompts
+    cat > "$TOOLKIT_DIR/warp-ai-prompts.txt" << 'EOF'
+# Warp AI Prompts for Pre-commit Cleanup
+
+## Analysis Prompt (Cmd+G)
+```
+I just finished implementing a feature and need to follow Matt Shumer's cleanup advice: "Please clean up the code you worked on, remove any bloat you added, and document it very clearly."
+
+Based on my project context and the files I just modified, help me:
+1. Identify debug statements and dead code to remove
+2. Find duplicate functions that can be consolidated  
+3. Spot missing documentation and type hints
+4. Suggest improvements for error handling
+
+Files to analyze: [paste file list from .cleanup-toolkit/cleanup-context.md]
+```
+
+## Cleanup Execution Prompt (Cmd+G)
+```
+Now help me systematically clean up each file following Matt Shumer's standards:
+
+1. Remove all debug print statements and console.logs
+2. Eliminate unused imports and variables
+3. Consolidate any duplicate functions I created
+4. Add comprehensive docstrings to all functions
+5. Improve error handling with specific exceptions
+6. Add type hints where missing
+
+For each file, show me the specific changes to make while preserving all functionality.
+```
+
+## Verification Prompt (Cmd+G)
+```
+Help me verify my cleanup is complete and follows Matt Shumer's standards:
+
+1. Check if I missed any debug statements or dead code
+2. Ensure all functions have proper documentation
+3. Verify error handling is robust
+4. Confirm the code is clean and maintainable
+5. Suggest any final improvements
+
+Generate a summary of the cleanup work completed.
+```
+
+## Workflow Commands
+After getting AI guidance, use these Warp workflows:
+- `cleanup-analysis` - Run analysis workflow
+- `cleanup-execute` - Execute cleanup steps  
+- `cleanup-verify` - Verify results
+EOF
+
+    print_prompt "Warp AI prompts generated at $TOOLKIT_DIR/warp-ai-prompts.txt"
+    print_info "💡 Next: Use Cmd+G in Warp Terminal with these prompts for AI-guided cleanup"
+}
+
+# Generate shell script prompts (for manual execution)
+generate_shell_prompts() {
+    print_step "Generating shell script guidance..."
+    
+    cat > "$TOOLKIT_DIR/shell-cleanup-guide.md" << EOF
+# Shell-Based Cleanup Guide
+
+## Matt Shumer's Cleanup Process
+"Please clean up the code you worked on, remove any bloat you added, and document it very clearly."
+
+## Manual Cleanup Steps
+
+### 1. Analysis Phase
+\`\`\`bash
+# Review modified files
+git diff --cached --name-only
+
+# Check for debug statements
+grep -r "print(\|console\.log\|System\.out" \$(git diff --cached --name-only)
+
+# Find TODO/FIXME comments  
+grep -r "TODO\|FIXME\|XXX\|HACK" \$(git diff --cached --name-only)
+
+# Look for duplicate functions
+grep -r "^def \|^function \|^class " \$(git diff --cached --name-only) | sort
+\`\`\`
+
+### 2. Cleanup Phase
+\`\`\`bash
+# For each file, manually:
+# 1. Remove or comment debug statements
+# 2. Remove unused imports
+# 3. Consolidate duplicate functions
+# 4. Add docstrings and documentation
+# 5. Improve error handling
+
+# Use your editor to make these changes systematically
+\`\`\`
+
+### 3. Verification Phase
+\`\`\`bash
+# Run tests to ensure functionality preserved
+npm test || python -m pytest || make test
+
+# Check code quality
+# (Use your project's linting tools)
+
+# Final review
+git diff --cached
+\`\`\`
+
+## Automated Assistance
+If you have the cleanup script available:
+\`\`\`bash
+bash .cleanup-toolkit/scripts/code_cleanup_gist.sh --pre-commit
+\`\`\`
+EOF
+
+    print_info "Shell cleanup guide generated at $TOOLKIT_DIR/shell-cleanup-guide.md"
+}
+
+# Generate summary and next steps
+generate_cleanup_summary() {
+    local staged_files=$(get_staged_files)
+    local file_count=$(echo "$staged_files" | wc -l)
+    
+    cat > "$TOOLKIT_DIR/cleanup-summary.md" << EOF
+# Pre-commit Cleanup Summary
+
+## Matt Shumer's Cleanup Request
+"Please clean up the code you worked on, remove any bloat you added, and document it very clearly."
+
+## Commit Information
+- **Date**: $(date)
+- **Branch**: $(git branch --show-current)
+- **Files Modified**: $file_count files
+- **Commit Message**: $(cat .git/COMMIT_EDITMSG 2>/dev/null | head -1 || echo "")
+
+## Available Cleanup Methods
+
+### 🤖 Claude Code (Recommended)
+$([ -f "claude.md" ] && echo "✅ Available - Use prompts in .cleanup-toolkit/claude-prompts.txt" || echo "❌ Not configured")
+
+### ⚡ Warp Terminal AI
+$([ -d ".warp" ] && echo "✅ Available - Use Cmd+G with prompts in .cleanup-toolkit/warp-ai-prompts.txt" || echo "❌ Not configured")
+
+### 🔧 Shell Script
+✅ Available - Follow guide in .cleanup-toolkit/shell-cleanup-guide.md
+
+## Next Steps
+1. Choose your preferred cleanup method above
+2. Follow the generated prompts/guides
+3. Apply systematic cleanup to all modified files
+4. Verify functionality is preserved
+5. Complete your commit
+
+## Files Requiring Attention
+$(echo "$staged_files" | sed 's/^/- /')
+
+---
+*This summary was generated by the Matt Shumer Agentic Cleanup Toolkit*
+EOF
+
+    print_step "Cleanup summary generated at $TOOLKIT_DIR/cleanup-summary.md"
+}
+
+# Display final instructions
+display_instructions() {
+    echo ""
+    echo -e "${GREEN}╔══════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${GREEN}║${NC}                    Cleanup Prompts Ready!                   ${GREEN}║${NC}"
+    echo -e "${GREEN}╚══════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    
+    print_info "Matt Shumer's cleanup request has been prepared for AI frameworks"
+    echo ""
+    
+    print_info "📋 Available cleanup methods:"
+    
+    if [ -f "claude.md" ]; then
+        echo -e "   ${PURPLE}🤖 Claude Code${NC}: Use prompts in .cleanup-toolkit/claude-prompts.txt"
+    fi
+    
+    if [ -d ".warp" ]; then
+        echo -e "   ${PURPLE}⚡ Warp Terminal${NC}: Use Cmd+G with .cleanup-toolkit/warp-ai-prompts.txt"
+    fi
+    
+    echo -e "   ${PURPLE}🔧 Shell Script${NC}: Follow .cleanup-toolkit/shell-cleanup-guide.md"
+    echo ""
+    
+    print_info "📊 Cleanup context: .cleanup-toolkit/cleanup-context.md"
+    print_info "📝 Summary: .cleanup-toolkit/cleanup-summary.md"
+    echo ""
+    
+    print_warning "⚠️  IMPORTANT: This pre-commit hook has paused your commit"
+    print_info "After completing cleanup with your chosen AI framework:"
+    echo "   1. Stage any additional changes: git add ."
+    echo "   2. Complete your commit: git commit --no-verify"
+    echo ""
+    
+    print_info "💡 Or skip cleanup: git commit --no-verify -m 'your message'"
+    echo ""
+}
+
+# Main execution
+main() {
+    print_header
+    
+    # Check if we should skip cleanup
+    check_skip_conditions
+    
+    # Check if there are staged files
+    local staged_files=$(get_staged_files)
+    if [ -z "$staged_files" ]; then
+        print_warning "No staged files found"
+        exit 0
+    fi
+    
+    print_info "Preparing Matt Shumer's cleanup process for $(echo "$staged_files" | wc -l) modified files..."
+    
+    # Create toolkit directory if it doesn't exist
+    mkdir -p "$TOOLKIT_DIR"
+    
+    # Generate context and prompts for different AI frameworks
+    generate_cleanup_context
+    generate_claude_code_prompts
+    generate_warp_prompts
+    generate_shell_prompts
+    generate_cleanup_summary
+    
+    # Display instructions
+    display_instructions
+    
+    # Exit with code 1 to pause the commit
+    exit 1
+}
+
+# Run main function
+main "$@"
+

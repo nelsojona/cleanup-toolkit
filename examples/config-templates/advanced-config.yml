@@ -1,0 +1,88 @@
+# Matt Shumer Code Cleanup Toolkit - Advanced Configuration
+# This configuration enables all features and strict quality checks
+
+# General settings
+cleanup_enabled: true
+auto_fix_enabled: true
+documentation_required: true
+
+# Integration settings
+shell_script_enabled: true
+claude_code_enabled: true
+warp_terminal_enabled: true
+
+# Language-specific settings
+python:
+  use_black: true
+  use_isort: true
+  use_autoflake: true
+  use_mypy: true
+  use_flake8: true
+  max_line_length: 88
+  
+javascript:
+  use_prettier: true
+  use_eslint: true
+  use_typescript: true
+  
+java:
+  use_google_java_format: true
+  use_checkstyle: true
+  
+go:
+  use_gofmt: true
+  use_goimports: true
+  use_golint: true
+  
+rust:
+  use_rustfmt: true
+  use_clippy: true
+
+# Quality checks (strict)
+max_file_lines: 300
+max_function_lines: 30
+require_docstrings: true
+require_type_hints: true
+max_complexity: 10
+
+# Debug statement detection
+debug_patterns:
+  python: ["print\\(", "pprint\\(", "pp\\("]
+  javascript: ["console\\.log\\(", "console\\.debug\\(", "debugger"]
+  java: ["System\\.out\\.print", "System\\.err\\.print"]
+  go: ["fmt\\.Print", "log\\.Print"]
+  rust: ["println!", "dbg!"]
+
+# TODO/FIXME detection
+todo_patterns: ["TODO", "FIXME", "XXX", "HACK", "BUG"]
+
+# Pre-commit settings
+fail_on_warnings: true
+generate_reports: true
+update_handover: true
+create_cleanup_branch: false
+
+# Reporting
+report_format: "markdown"
+include_metrics: true
+include_suggestions: true
+
+# Advanced features
+auto_create_pr: false
+notify_team: false
+integration_webhooks: []
+
+# Custom rules
+custom_patterns:
+  remove:
+    - "# DEBUG:"
+    - "// DEBUG:"
+    - "/* DEBUG"
+  consolidate:
+    - "validate_.*email"
+    - "format_.*date"
+  document:
+    - "class \\w+:"
+    - "function \\w+\\("
+    - "def \\w+\\("
+
