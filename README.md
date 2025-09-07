@@ -64,7 +64,25 @@ graph TD
 
 ## 🤖 AI Framework Support
 
-### 🎨 Cursor (NEW!)
+### 🚀 Roo Code (NEW!)
+AI-powered development environment with deep code understanding.
+
+```bash
+# After pre-commit hook triggers:
+# 1. Open Roo Code workspace
+# 2. Use AI assistant for comprehensive analysis
+# 3. Follow interactive cleanup guidance
+```
+
+**Features:**
+- Full project context awareness
+- Interactive AI-guided cleanup
+- Learning from cleanup patterns
+- Cross-file analysis and refactoring
+
+[📖 Full Roo Code Integration Guide](docs/roo-code-integration.md)
+
+### 🎨 Cursor
 AI-powered code editor with intelligent cleanup capabilities.
 
 ```bash
@@ -136,6 +154,7 @@ cat .cleanup-toolkit/shell-cleanup-guide.md
 - Provides fallback manual guidance
 
 ### 🤖 **AI Framework Integration**
+- **Roo Code**: Deep project understanding + interactive guidance
 - **Cursor**: AI-powered editor with inline cleanup
 - **Claude Code**: Project context + systematic prompts
 - **Warp Terminal**: Real-time AI + custom workflows  
@@ -321,6 +340,7 @@ git commit --no-verify -m "emergency fix"
 ## 📖 Documentation
 
 - [Quick Start Guide](docs/quick-start.md)
+- [Roo Code Integration Guide](docs/roo-code-integration.md)
 - [Cursor Integration Guide](docs/cursor-integration.md)
 - [Claude Code Integration](claude-code/agentic-prompts.md)
 - [Warp Terminal Workflows](warp-terminal/agentic-workflows.md)

@@ -1,0 +1,62 @@
+{
+  "cleanup_toolkit": {
+    "enabled": true,
+    "mode": "systematic",
+    "auto_trigger": true,
+    "learning_enabled": true,
+    
+    "context_files": [
+      ".cleanup-toolkit/cleanup-context.md",
+      ".cleanup-toolkit/cleanup-summary.md",
+      ".cleanup-toolkit/roo-prompts.txt"
+    ],
+    
+    "analysis": {
+      "deep_context": true,
+      "cross_file_analysis": true,
+      "pattern_recognition": true,
+      "business_logic_understanding": true,
+      "dependency_tracking": true,
+      "code_flow_analysis": true
+    },
+    
+    "cleanup_standards": {
+      "remove_debug_statements": true,
+      "consolidate_duplicates": true,
+      "improve_documentation": true,
+      "enhance_error_handling": true,
+      "optimize_imports": true,
+      "improve_naming": true,
+      "simplify_logic": true,
+      "extract_constants": true,
+      "remove_dead_code": true
+    },
+    
+    "quality_gates": {
+      "preserve_functionality": true,
+      "maintain_api_compatibility": true,
+      "require_documentation": true,
+      "verify_test_compatibility": true,
+      "enforce_code_style": true,
+      "check_performance": false
+    },
+    
+    "reporting": {
+      "generate_metrics": true,
+      "before_after_comparison": true,
+      "improvement_suggestions": true,
+      "learning_feedback": true,
+      "export_format": "markdown",
+      "include_visualizations": true
+    },
+    
+    "ai_settings": {
+      "model_preference": "advanced",
+      "context_window": "large",
+      "temperature": 0.7,
+      "max_suggestions": 10,
+      "interactive_mode": true,
+      "explain_changes": true
+    }
+  }
+}

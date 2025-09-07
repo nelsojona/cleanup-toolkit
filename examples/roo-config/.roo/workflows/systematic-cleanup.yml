@@ -1,0 +1,131 @@
+name: "Systematic Code Cleanup"
+description: "AI-powered code cleanup following best practices"
+version: "1.0.0"
+trigger: "pre-commit"
+enabled: true
+
+settings:
+  interactive: true
+  auto_apply: false
+  require_confirmation: true
+  generate_reports: true
+
+steps:
+  - name: "Generate Cleanup Context"
+    action: "analyze_changes"
+    description: "Analyze modified files and generate cleanup context"
+    config:
+      include_patterns:
+        - "*.py"
+        - "*.js"
+        - "*.ts"
+        - "*.jsx"
+        - "*.tsx"
+        - "*.java"
+        - "*.go"
+        - "*.rs"
+      exclude_patterns:
+        - "*.test.*"
+        - "*.spec.*"
+        - "node_modules/**"
+        - "vendor/**"
+      output: ".cleanup-toolkit/cleanup-context.md"
+  
+  - name: "AI Cleanup Analysis"
+    action: "ai_analyze"
+    description: "Use AI to identify cleanup opportunities"
+    prompt: |
+      Analyze the modified files for cleanup opportunities.
+      Focus on:
+      - Debug statements and console logs
+      - Duplicate or similar functions
+      - Missing or inadequate documentation
+      - Poor error handling
+      - Complex logic that could be simplified
+      - Unused imports and variables
+      
+      Provide specific, actionable suggestions.
+    context_files:
+      - ".cleanup-toolkit/cleanup-context.md"
+      - "README.md"
+      - "package.json"
+      - "requirements.txt"
+    output: ".cleanup-toolkit/analysis-report.md"
+  
+  - name: "Interactive Cleanup"
+    action: "ai_interactive"
+    description: "Interactive AI-guided cleanup process"
+    prompt: |
+      Guide me through systematic cleanup following these principles:
+      1. Remove all debug and development artifacts
+      2. Consolidate duplicate logic into reusable functions
+      3. Add comprehensive documentation
+      4. Improve error handling and validation
+      5. Ensure consistent code style
+      
+      For each change:
+      - Explain what needs to be changed and why
+      - Show the specific improvement
+      - Ensure functionality is preserved
+    config:
+      mode: "interactive"
+      show_diff: true
+      allow_skip: true
+      batch_similar: true
+  
+  - name: "Apply Improvements"
+    action: "apply_changes"
+    description: "Apply the approved cleanup changes"
+    config:
+      create_backup: true
+      atomic_commits: false
+      verify_syntax: true
+      run_formatters: true
+  
+  - name: "Quality Verification"
+    action: "ai_verify"
+    description: "Verify cleanup quality and completeness"
+    prompt: |
+      Verify the cleanup by checking:
+      1. All original functionality is preserved
+      2. Documentation is clear and comprehensive
+      3. Error handling is robust
+      4. Code follows project conventions
+      5. No new issues were introduced
+      
+      Generate a detailed report with:
+      - Summary of improvements
+      - Metrics (lines changed, complexity reduction, etc.)
+      - Any remaining issues or suggestions
+    output: ".cleanup-toolkit/cleanup-summary.md"
+  
+  - name: "Run Tests"
+    action: "run_tests"
+    description: "Run tests to ensure functionality is preserved"
+    config:
+      test_command: "auto_detect"  # Or specify: "npm test", "pytest", etc.
+      fail_on_error: true
+      generate_coverage: true
+  
+  - name: "Generate Report"
+    action: "generate_report"
+    description: "Create final cleanup report"
+    config:
+      include:
+        - summary
+        - metrics
+        - before_after_comparison
+        - test_results
+        - recommendations
+      format: "markdown"
+      output: ".cleanup-toolkit/final-report.md"
+
+notifications:
+  on_success:
+    message: "✅ Code cleanup completed successfully!"
+    show_metrics: true
+  on_failure:
+    message: "❌ Cleanup failed. Please review the errors."
+    show_errors: true
+  on_skip:
+    message: "⏭️ Cleanup skipped by user."
