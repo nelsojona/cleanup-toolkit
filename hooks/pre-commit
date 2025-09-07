@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Matt Shumer Code Cleanup Toolkit - Agentic Pre-commit Hook
+# Code Cleanup Toolkit - Agentic Pre-commit Hook
 # Prompts AI frameworks to perform cleanup instead of doing programmatic cleanup
 # "After successfully completing your goal, ask: 'Please clean up the code you worked on, remove any bloat you added, and document it very clearly.'"
 
@@ -22,7 +22,7 @@ SKIP_CLEANUP="${SKIP_CLEANUP:-false}"
 
 print_header() {
     echo -e "${BLUE}╔══════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${BLUE}║${NC}  ${PURPLE}Matt Shumer Agentic Cleanup Toolkit${NC} - Pre-commit Hook   ${BLUE}║${NC}"
+    echo -e "${BLUE}║${NC}  ${PURPLE}Agentic Cleanup Toolkit${NC} - Pre-commit Hook            ${BLUE}║${NC}"
     echo -e "${BLUE}║${NC}  ${GREEN}Prompting AI frameworks for systematic cleanup${NC}           ${BLUE}║${NC}"
     echo -e "${BLUE}╚══════════════════════════════════════════════════════════════╝${NC}"
     echo ""
@@ -80,7 +80,7 @@ generate_cleanup_context() {
 ## Files Modified in This Commit
 $(echo "$staged_files" | sed 's/^/- /')
 
-## Matt Shumer's Cleanup Request
+## Cleanup Request
 "Please clean up the code you worked on, remove any bloat you added, and document it very clearly."
 
 ## Specific Areas to Focus On
@@ -135,7 +135,7 @@ generate_claude_code_prompts() {
         cat >> handover.md << EOF
 
 ## Pre-commit Cleanup Request - $(date +%Y-%m-%d %H:%M)
-**Matt Shumer's Cleanup Goal**: "Please clean up the code you worked on, remove any bloat you added, and document it very clearly."
+**Cleanup Goal**: "Please clean up the code you worked on, remove any bloat you added, and document it very clearly."
 
 ### Files Modified in This Commit:
 $(get_staged_files | sed 's/^/- /')
@@ -151,7 +151,7 @@ $(get_staged_files | sed 's/^/- /')
 ### Claude Code Instructions:
 1. Read the cleanup context: \`cat .cleanup-toolkit/cleanup-context.md\`
 2. Review each modified file systematically
-3. Apply Matt Shumer's cleanup principles
+3. Apply cleanup principles
 4. Update this handover.md with progress
 5. Generate a cleanup summary
 
@@ -165,7 +165,7 @@ EOF
 
 ## Initial Analysis Prompt
 ```
-I just completed a development goal and I'm ready for systematic cleanup following Matt Shumer's advice: "Please clean up the code you worked on, remove any bloat you added, and document it very clearly."
+I just completed a development goal and I'm ready for systematic cleanup following this advice: "Please clean up the code you worked on, remove any bloat you added, and document it very clearly."
 
 Please read:
 1. claude.md (project context)
@@ -199,7 +199,7 @@ Please verify the cleanup is complete:
 4. Update handover.md with completion status
 5. Provide a summary of changes made
 
-Generate a final cleanup report following Matt Shumer's standards.
+Generate a final cleanup report following cleanup standards.
 ```
 EOF
 
@@ -221,7 +221,7 @@ generate_warp_prompts() {
 # Warp AI Context for Pre-commit Cleanup
 
 ## Current Situation
-Just completed a development goal and ready for Matt Shumer's cleanup process:
+Just completed a development goal and ready for cleanup process:
 "Please clean up the code you worked on, remove any bloat you added, and document it very clearly."
 
 ## Project Context
@@ -242,7 +242,7 @@ EOF
 
 ## Analysis Prompt (Cmd+G)
 ```
-I just finished implementing a feature and need to follow Matt Shumer's cleanup advice: "Please clean up the code you worked on, remove any bloat you added, and document it very clearly."
+I just finished implementing a feature and need to follow this cleanup advice: "Please clean up the code you worked on, remove any bloat you added, and document it very clearly."
 
 Based on my project context and the files I just modified, help me:
 1. Identify debug statements and dead code to remove
@@ -255,7 +255,7 @@ Files to analyze: [paste file list from .cleanup-toolkit/cleanup-context.md]
 
 ## Cleanup Execution Prompt (Cmd+G)
 ```
-Now help me systematically clean up each file following Matt Shumer's standards:
+Now help me systematically clean up each file following cleanup standards:
 
 1. Remove all debug print statements and console.logs
 2. Eliminate unused imports and variables
@@ -269,7 +269,7 @@ For each file, show me the specific changes to make while preserving all functio
 
 ## Verification Prompt (Cmd+G)
 ```
-Help me verify my cleanup is complete and follows Matt Shumer's standards:
+Help me verify my cleanup is complete and follows cleanup standards:
 
 1. Check if I missed any debug statements or dead code
 2. Ensure all functions have proper documentation
@@ -298,7 +298,7 @@ generate_shell_prompts() {
     cat > "$TOOLKIT_DIR/shell-cleanup-guide.md" << EOF
 # Shell-Based Cleanup Guide
 
-## Matt Shumer's Cleanup Process
+## Cleanup Process
 "Please clean up the code you worked on, remove any bloat you added, and document it very clearly."
 
 ## Manual Cleanup Steps
@@ -360,7 +360,7 @@ generate_cleanup_summary() {
     cat > "$TOOLKIT_DIR/cleanup-summary.md" << EOF
 # Pre-commit Cleanup Summary
 
-## Matt Shumer's Cleanup Request
+## Cleanup Request
 "Please clean up the code you worked on, remove any bloat you added, and document it very clearly."
 
 ## Commit Information
@@ -391,7 +391,7 @@ $([ -d ".warp" ] && echo "✅ Available - Use Cmd+G with prompts in .cleanup-too
 $(echo "$staged_files" | sed 's/^/- /')
 
 ---
-*This summary was generated by the Matt Shumer Agentic Cleanup Toolkit*
+*This summary was generated by the Agentic Cleanup Toolkit*
 EOF
 
     print_step "Cleanup summary generated at $TOOLKIT_DIR/cleanup-summary.md"
@@ -405,7 +405,7 @@ display_instructions() {
     echo -e "${GREEN}╚══════════════════════════════════════════════════════════════╝${NC}"
     echo ""
     
-    print_info "Matt Shumer's cleanup request has been prepared for AI frameworks"
+    print_info "Cleanup request has been prepared for AI frameworks"
     echo ""
     
     print_info "📋 Available cleanup methods:"
@@ -449,7 +449,7 @@ main() {
         exit 0
     fi
     
-    print_info "Preparing Matt Shumer's cleanup process for $(echo "$staged_files" | wc -l) modified files..."
+    print_info "Preparing cleanup process for $(echo "$staged_files" | wc -l) modified files..."
     
     # Create toolkit directory if it doesn't exist
     mkdir -p "$TOOLKIT_DIR"

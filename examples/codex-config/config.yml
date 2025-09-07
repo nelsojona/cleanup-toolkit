@@ -1,0 +1,158 @@
+# OpenAI Codex Configuration for Cleanup Toolkit
+
+# API Configuration
+openai:
+  api_key: "${OPENAI_API_KEY}"  # Set via environment variable
+  model: "code-davinci-002"      # Options: code-davinci-002, code-cushman-001
+  temperature: 0.1               # Lower = more deterministic
+  max_tokens: 2048              # Maximum tokens per request
+  
+# Cleanup Settings
+cleanup:
+  enabled: true
+  auto_trigger: false           # Don't auto-cleanup on commit
+  interactive: true             # Require user confirmation
+  create_backups: true          # Always backup before changes
+  
+  # File handling
+  max_file_size: 10000         # Skip files larger than this (lines)
+  supported_extensions:
+    - .py
+    - .js
+    - .ts
+    - .jsx
+    - .tsx
+    - .java
+    - .go
+    - .rs
+    - .rb
+    - .php
+    - .cpp
+    - .c
+    - .cs
+  
+  # Exclude patterns
+  exclude_patterns:
+    - "*.test.*"
+    - "*.spec.*"
+    - "*.min.js"
+    - "node_modules/**"
+    - "vendor/**"
+    - "dist/**"
+    - "build/**"
+    - ".git/**"
+
+# Analysis Configuration
+analysis:
+  detect_issues:
+    - debug_statements
+    - console_output
+    - duplicate_functions
+    - missing_documentation
+    - poor_error_handling
+    - unused_imports
+    - dead_code
+    - long_functions
+    - complex_conditions
+  
+  severity_levels:
+    debug_statements: high
+    missing_documentation: medium
+    unused_imports: low
+
+# Cleanup Standards
+standards:
+  remove_debug: true
+  add_documentation: true
+  improve_error_handling: true
+  consolidate_duplicates: true
+  optimize_imports: true
+  
+  # Language-specific settings
+  python:
+    use_type_hints: true
+    docstring_style: "google"  # google, numpy, sphinx
+    max_line_length: 88
+    use_black: true
+  
+  javascript:
+    use_jsdoc: true
+    prefer_const: true
+    use_arrow_functions: true
+    remove_console_log: true
+  
+  typescript:
+    strict_types: true
+    no_any: true
+    prefer_interfaces: true
+
+# Prompt Templates
+prompts:
+  analysis: |
+    Analyze this {language} code for cleanup opportunities:
+    {code}
+    
+    Focus on:
+    - Debug statements and dead code
+    - Duplicate logic
+    - Missing documentation
+    - Error handling
+    - Code quality
+    
+    Provide specific findings:
+  
+  cleanup: |
+    Clean up this {language} code:
+    
+    Issues found:
+    {analysis}
+    
+    Original code:
+    {code}
+    
+    Apply systematic improvements and return cleaned code:
+  
+  documentation: |
+    Generate comprehensive documentation for this {language} code:
+    {code}
+    
+    Include function descriptions, parameters, returns, and examples:
+
+# Reporting
+reporting:
+  enabled: true
+  format: "markdown"  # markdown, json, html
+  output_dir: ".cleanup-toolkit/reports"
+  include_metrics: true
+  include_diff: true
+  
+  metrics:
+    - lines_changed
+    - debug_removed
+    - docs_added
+    - functions_consolidated
+    - errors_handled
+
+# Integration Hooks
+hooks:
+  pre_cleanup: ""              # Script to run before cleanup
+  post_cleanup: ""             # Script to run after cleanup
+  on_error: ""                 # Script to run on error
+  
+# Advanced Settings
+advanced:
+  cache_responses: true        # Cache similar code patterns
+  cache_ttl: 3600             # Cache time-to-live (seconds)
+  retry_on_error: true        # Retry failed API calls
+  max_retries: 3              # Maximum retry attempts
+  rate_limit_delay: 2         # Delay between retries (seconds)
+  
+  # Cost optimization
+  use_streaming: false        # Stream responses (when available)
+  chunk_large_files: true     # Process large files in chunks
+  chunk_size: 100            # Lines per chunk
+  
+  # Quality control
+  validate_syntax: true       # Validate cleaned code syntax
+  preserve_functionality: true # Ensure functionality is maintained
+  run_tests_after: false      # Run tests after cleanup

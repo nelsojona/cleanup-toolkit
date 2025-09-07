@@ -104,7 +104,7 @@ Generate a summary of the cleanup work completed and any remaining recommendatio
 ```yaml
 name: "🔍 Code Cleanup Analysis"
 command: |
-  echo "🔍 Analyzing code for Matt Shumer cleanup opportunities..."
+  echo "🔍 Analyzing code for cleanup opportunities..."
   echo "============================================="
   echo ""
   

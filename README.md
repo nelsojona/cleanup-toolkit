@@ -64,7 +64,25 @@ graph TD
 
 ## 🤖 AI Framework Support
 
-### 🚀 Roo Code (NEW!)
+### 🔮 OpenAI Codex (NEW!)
+Powerful code understanding and generation for intelligent cleanup.
+
+```bash
+# After pre-commit hook triggers:
+# 1. Set OPENAI_API_KEY environment variable
+# 2. Run Codex cleanup scripts
+# 3. Review and apply AI-generated improvements
+```
+
+**Features:**
+- Deep code comprehension
+- Context-aware refactoring  
+- Automated documentation generation
+- Multi-language support
+
+[📖 Full Codex Integration Guide](docs/codex-integration.md)
+
+### 🚀 Roo Code
 AI-powered development environment with deep code understanding.
 
 ```bash
@@ -154,6 +172,7 @@ cat .cleanup-toolkit/shell-cleanup-guide.md
 - Provides fallback manual guidance
 
 ### 🤖 **AI Framework Integration**
+- **OpenAI Codex**: Deep code understanding + generation
 - **Roo Code**: Deep project understanding + interactive guidance
 - **Cursor**: AI-powered editor with inline cleanup
 - **Claude Code**: Project context + systematic prompts
@@ -340,6 +359,7 @@ git commit --no-verify -m "emergency fix"
 ## 📖 Documentation
 
 - [Quick Start Guide](docs/quick-start.md)
+- [OpenAI Codex Integration](docs/codex-integration.md)
 - [Roo Code Integration Guide](docs/roo-code-integration.md)
 - [Cursor Integration Guide](docs/cursor-integration.md)
 - [Claude Code Integration](claude-code/agentic-prompts.md)

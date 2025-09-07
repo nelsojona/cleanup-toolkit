@@ -1,8 +1,8 @@
 # Cursor Integration for Cleanup Toolkit
 
-> *"After successfully completing your goal, ask: 'Please clean up the code you worked on, remove any bloat you added, and document it very clearly.'"* - Matt Shumer
+> *"After successfully completing your goal, ask: 'Please clean up the code you worked on, remove any bloat you added, and document it very clearly.'"*
 
-Integrate Matt Shumer's systematic code cleanup workflow with **Cursor**, the AI-powered code editor. This guide shows how to use Cursor's AI capabilities with the Cleanup Toolkit for intelligent, context-aware code improvement.
+Integrate systematic code cleanup workflow with **Cursor**, the AI-powered code editor. This guide shows how to use Cursor's AI capabilities with the Cleanup Toolkit for intelligent, context-aware code improvement.
 
 ## 🎯 Why Cursor + Cleanup Toolkit?
 
@@ -48,7 +48,7 @@ When the pre-commit hook triggers, use these prompts with Cursor's AI:
 
 #### 1. Initial Analysis Prompt
 ```
-I just completed a development goal and my pre-commit hook triggered Matt Shumer's cleanup process. 
+I just completed a development goal and my pre-commit hook triggered the cleanup process. 
 
 Please analyze these files for cleanup opportunities:
 [paste file list from .cleanup-toolkit/cleanup-context.md]
@@ -59,12 +59,12 @@ Focus on:
 - Missing documentation
 - Error handling improvements
 
-Provide a systematic cleanup plan following Matt Shumer's principles.
+Provide a systematic cleanup plan following cleanup principles.
 ```
 
 #### 2. Systematic Cleanup Prompt
 ```
-Now help me execute Matt Shumer's cleanup systematically. For each file:
+Now help me execute cleanup systematically. For each file:
 
 1. **Remove Bloat**: Debug statements, unused imports, dead code
 2. **Consolidate Logic**: Merge duplicate functions, extract common patterns
@@ -76,7 +76,7 @@ Show me the specific changes to make while preserving all functionality.
 
 #### 3. Verification Prompt
 ```
-Please verify my cleanup follows Matt Shumer's standards:
+Please verify my cleanup follows cleanup standards:
 
 1. Check that all original functionality is preserved
 2. Ensure documentation is comprehensive and clear
@@ -93,14 +93,14 @@ For targeted cleanup of specific code sections:
 #### Debug Statement Removal
 ```
 # Select debug statements and use Cmd+K
-Remove these debug statements following Matt Shumer's cleanup principles. 
+Remove these debug statements following cleanup principles. 
 Comment them out for review rather than deleting completely.
 ```
 
 #### Function Documentation
 ```
 # Select a function and use Cmd+K
-Add comprehensive documentation following Matt Shumer's standards:
+Add comprehensive documentation following cleanup standards:
 - Clear description of purpose
 - Parameter types and descriptions
 - Return value documentation
@@ -110,7 +110,7 @@ Add comprehensive documentation following Matt Shumer's standards:
 #### Code Consolidation
 ```
 # Select duplicate functions and use Cmd+K
-These functions appear to be duplicates. Following Matt Shumer's cleanup 
+These functions appear to be duplicates. Following cleanup 
 principles, consolidate them into a single, well-documented function that 
 handles all use cases.
 ```
@@ -150,7 +150,7 @@ cursor app.py utils.py
 # Use Cmd+K with this prompt:
 ```
 ```
-Following Matt Shumer's documentation standards, add comprehensive 
+Following documentation standards, add comprehensive 
 docstrings that clearly explain the purpose, parameters, return values, 
 and any exceptions. Make the documentation so clear that any developer 
 can understand and maintain this code.
@@ -192,19 +192,19 @@ Create custom commands in Cursor for quick cleanup:
 {
   "commands": [
     {
-      "name": "Matt Shumer Cleanup Analysis",
+      "name": "Cleanup Analysis",
       "command": "cursor.ai.chat",
-      "prompt": "Analyze this code for Matt Shumer cleanup opportunities: remove bloat, consolidate logic, document clearly"
+      "prompt": "Analyze this code for cleanup opportunities: remove bloat, consolidate logic, document clearly"
     },
     {
       "name": "Generate Cleanup Documentation",
       "command": "cursor.ai.inline",
-      "prompt": "Add comprehensive documentation following Matt Shumer's clear documentation standards"
+      "prompt": "Add comprehensive documentation following clear documentation standards"
     },
     {
       "name": "Consolidate Duplicate Functions",
       "command": "cursor.ai.inline", 
-      "prompt": "Following Matt Shumer's principles, consolidate these duplicate functions into a single, well-designed function"
+      "prompt": "Following cleanup principles, consolidate these duplicate functions into a single, well-designed function"
     }
   ]
 }
@@ -228,14 +228,14 @@ Create custom commands in Cursor for quick cleanup:
 
 3. **Use Cursor AI Chat (Cmd+L)**
    ```
-   I need to follow Matt Shumer's cleanup process. Please read the cleanup 
+   I need to follow the cleanup process. Please read the cleanup 
    context and help me systematically clean up auth.py and user.py. Focus 
    on removing debug statements, consolidating duplicate validation logic, 
    and adding comprehensive documentation.
    ```
 
 4. **Apply Targeted Fixes (Cmd+K)**
-   - Select debug statements → "Remove following Matt Shumer's principles"
+   - Select debug statements → "Remove following cleanup principles"
    - Select functions → "Add comprehensive docstrings"
    - Select duplicates → "Consolidate into single function"
 
@@ -255,7 +255,7 @@ def validate_email(email):
     print(f"Validating: {email}")  # Debug statement
     return "@" in email
 
-# Cursor prompt: "Clean up following Matt Shumer's Python standards"
+# Cursor prompt: "Clean up following Python cleanup standards"
 
 # After Cursor AI cleanup
 def validate_email(email: str) -> bool:
@@ -286,7 +286,7 @@ function processUser(name, email) {
     return false;
 }
 
-// Cursor prompt: "Apply Matt Shumer's JavaScript cleanup standards"
+// Cursor prompt: "Apply JavaScript cleanup standards"
 
 // After Cursor AI cleanup
 /**
@@ -363,9 +363,9 @@ cat .cursor-settings
 
 - [Cursor Documentation](https://cursor.sh/docs)
 - [Cleanup Toolkit Main Repository](https://github.com/your-username/cleanup-toolkit)
-- [Matt Shumer's Original Tweet](https://x.com/mattshumer_/status/1964540998132068513)
+- [Original Tweet](https://x.com/mattshumer_/status/1964540998132068513)
 - [Cursor AI Best Practices](https://cursor.sh/docs/ai-best-practices)
 
 ---
 
-*Transform your Cursor workflow with AI-powered systematic code cleanup following Matt Shumer's principles. Clean code, clear documentation, intelligent refactoring! 🤖✨*
+*Transform your Cursor workflow with AI-powered systematic code cleanup. Clean code, clear documentation, intelligent refactoring! 🤖✨*

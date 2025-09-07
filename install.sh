@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Matt Shumer Code Cleanup Toolkit - Installation Script
+# Code Cleanup Toolkit - Installation Script
 # Installs and configures the complete cleanup toolkit
 
 set -e
@@ -14,13 +14,13 @@ PURPLE='\033[0;35m'
 NC='\033[0m'
 
 TOOLKIT_VERSION="1.0.0"
-REPO_URL="https://github.com/nelsojona/matt-shumer-cleanup-toolkit"
+REPO_URL="https://github.com/nelsojona/cleanup-toolkit"
 
 print_header() {
     clear
     echo -e "${PURPLE}╔══════════════════════════════════════════════════════════════╗${NC}"
     echo -e "${PURPLE}║${NC}                                                              ${PURPLE}║${NC}"
-    echo -e "${PURPLE}║${NC}    ${BLUE}Matt Shumer Code Cleanup Toolkit v$TOOLKIT_VERSION${NC}           ${PURPLE}║${NC}"
+    echo -e "${PURPLE}║${NC}    ${BLUE}Code Cleanup Toolkit v$TOOLKIT_VERSION${NC}                      ${PURPLE}║${NC}"
     echo -e "${PURPLE}║${NC}                                                              ${PURPLE}║${NC}"
     echo -e "${PURPLE}║${NC}    ${GREEN}\"Clean up code, remove bloat, document clearly\"${NC}        ${PURPLE}║${NC}"
     echo -e "${PURPLE}║${NC}                                                              ${PURPLE}║${NC}"
@@ -165,7 +165,7 @@ EOF
 - [ ] [Add your tasks here]
 
 ## Completed Today
-- [x] Installed Matt Shumer Code Cleanup Toolkit
+- [x] Installed Code Cleanup Toolkit
 
 ## Files to Review
 [List files that need cleanup]
@@ -205,7 +205,7 @@ create_config() {
     local config_file="$toolkit_dir/config.yml"
     
     cat > "$config_file" << EOF
-# Matt Shumer Code Cleanup Toolkit Configuration
+# Code Cleanup Toolkit Configuration
 
 # General settings
 cleanup_enabled: true
@@ -257,7 +257,7 @@ setup_shell_aliases() {
     
     cat > "$alias_file" << 'EOF'
 #!/bin/bash
-# Matt Shumer Code Cleanup Toolkit - Shell Aliases
+# Code Cleanup Toolkit - Shell Aliases
 
 # Quick cleanup commands
 alias cleanup-now='bash .cleanup-toolkit/scripts/code_cleanup_gist.sh'
@@ -282,7 +282,7 @@ fi
 alias show-todo='grep -rn "TODO\|FIXME\|XXX\|HACK" . --include="*.py" --include="*.js" --include="*.java"'
 alias show-debug='grep -rn "print(\|console\.log\|System\.out" . --include="*.py" --include="*.js" --include="*.java"'
 
-echo "Matt Shumer Code Cleanup Toolkit aliases loaded!"
+echo "Code Cleanup Toolkit aliases loaded!"
 echo "Available commands: cleanup-now, cleanup-analysis, cleanup-report, commit-clean"
 EOF
 
@@ -368,7 +368,7 @@ display_summary() {
     echo -e "${GREEN}╚══════════════════════════════════════════════════════════════╝${NC}"
     echo ""
     
-    print_step "Matt Shumer Code Cleanup Toolkit installed successfully!"
+    print_step "Code Cleanup Toolkit installed successfully!"
     echo ""
     
     print_info "📁 Toolkit installed in: $toolkit_dir"
@@ -435,7 +435,7 @@ interactive_setup() {
 main() {
     print_header
     
-    print_info "Installing Matt Shumer Code Cleanup Toolkit..."
+    print_info "Installing Code Cleanup Toolkit..."
     print_info "This will set up automated code cleanup based on the 'Vibe coding tip'"
     echo ""
     
@@ -461,7 +461,7 @@ main() {
 # Handle command line arguments
 case "${1:-}" in
     --help|-h)
-        echo "Matt Shumer Code Cleanup Toolkit Installer"
+        echo "Code Cleanup Toolkit Installer"
         echo ""
         echo "Usage: $0 [options]"
         echo ""
@@ -473,11 +473,11 @@ case "${1:-}" in
         exit 0
         ;;
     --version|-v)
-        echo "Matt Shumer Code Cleanup Toolkit v$TOOLKIT_VERSION"
+        echo "Code Cleanup Toolkit v$TOOLKIT_VERSION"
         exit 0
         ;;
     --uninstall)
-        print_info "Uninstalling Matt Shumer Code Cleanup Toolkit..."
+        print_info "Uninstalling Code Cleanup Toolkit..."
         rm -rf .cleanup-toolkit
         rm -f .git/hooks/pre-commit
         rm -f claude.md handover.md 2>/dev/null || true
