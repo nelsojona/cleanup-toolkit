@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Code Cleanup Gist Script
-# Based on Matt Shumer's "Vibe coding tip" and community insights
+# Based on the "Vibe coding tip" and community insights
 # Systematically clean up code after completing development goals
 
 set -e

@@ -363,7 +363,6 @@ cat .cursor-settings
 
 - [Cursor Documentation](https://cursor.sh/docs)
 - [Cleanup Toolkit Main Repository](https://github.com/your-username/cleanup-toolkit)
-- [Original Tweet](https://x.com/mattshumer_/status/1964540998132068513)
 - [Cursor AI Best Practices](https://cursor.sh/docs/ai-best-practices)
 
 ---

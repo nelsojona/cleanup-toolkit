@@ -387,6 +387,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
+- **OpenAI** for Codex's powerful code understanding and generation capabilities
+- **Roo Code** for deep project context awareness and interactive AI guidance
+- **Cursor** for AI-powered code editing with inline cleanup features
 - **Anthropic** for Claude's intelligent code understanding capabilities
 - **Warp Terminal** for modern terminal AI integration
 - **The open source community** for feedback, contributions, and continuous improvement
