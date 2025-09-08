@@ -94,20 +94,30 @@ def temp_dir() -> Generator[Path, None, None]:
 @pytest.fixture
 def temp_git_repo(temp_dir: Path) -> Generator[git.Repo, None, None]:
     """Create a temporary git repository for testing."""
-    repo = git.Repo.init(temp_dir)
+    # Change to temp directory to avoid path resolution issues
+    original_cwd = Path.cwd()
+    os.chdir(temp_dir)
     
-    # Configure git user for commits
-    with repo.config_writer() as config:
-        config.set_value("user", "name", "Test User")
-        config.set_value("user", "email", "test@example.com")
-    
-    # Create initial commit
-    readme_path = temp_dir / "README.md"
-    readme_path.write_text("# Test Repository\n")
-    repo.index.add(["README.md"])
-    repo.index.commit("Initial commit")
-    
-    yield repo
+    try:
+        repo = git.Repo.init(temp_dir)
+        
+        # Configure git user for commits
+        with repo.config_writer() as config:
+            config.set_value("user", "name", "Test User")
+            config.set_value("user", "email", "test@example.com")
+        
+        # Create initial commit using relative paths
+        readme_path = temp_dir / "README.md"
+        readme_path.write_text("# Test Repository\n")
+        
+        # Use subprocess for git operations to avoid GitPython path issues
+        subprocess.run(["git", "add", "README.md"], cwd=temp_dir, check=True)
+        subprocess.run(["git", "commit", "-m", "Initial commit"], cwd=temp_dir, check=True)
+        
+        yield repo
+    finally:
+        # Always return to original directory
+        os.chdir(original_cwd)
 
 
 @pytest.fixture
