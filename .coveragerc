@@ -1,62 +1,30 @@
-# Coverage.py configuration file
-# This file provides backward compatibility for tools that don't support pyproject.toml
-
 [run]
-branch = True
-source = .
+source = cleanup_toolkit
 omit = 
     */tests/*
-    */test_*.py
+    */test_*
     */__pycache__/*
     */site-packages/*
+    */dist-packages/*
     */venv/*
-    */env/*
     */.venv/*
-    */.env/*
-    */setup.py
-    */conftest.py
-parallel = True
-relative_files = True
 
 [report]
-# Regexes for lines to exclude from consideration
 exclude_lines =
-    # Have to re-enable the standard pragma
     pragma: no cover
-
-    # Don't complain about missing debug-only code:
     def __repr__
-    if self\.debug
-    if DEBUG
-
-    # Don't complain if tests don't hit defensive assertion code:
+    if self.debug:
+    if settings.DEBUG
     raise AssertionError
     raise NotImplementedError
-
-    # Don't complain if non-runnable code isn't run:
     if 0:
     if __name__ == .__main__.:
     if TYPE_CHECKING:
-
-    # Don't complain about abstract methods
+    class .*\bProtocol\):
     @(abc\.)?abstractmethod
-
-ignore_errors = True
-precision = 2
-show_missing = True
-skip_covered = False
-skip_empty = True
-sort = Cover
 
 [html]
 directory = htmlcov
-title = Cleanup Toolkit Coverage Report
-show_contexts = True
 
 [xml]
 output = coverage.xml
-
-[json]
-output = coverage.json
-pretty_print = True
-show_contexts = True
