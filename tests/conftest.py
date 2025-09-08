@@ -1,8 +1,7 @@
 """
-Pytest configuration and fixtures for Cleanup Toolkit tests.
+Minimal pytest configuration for Cleanup Toolkit tests.
 
-This module provides shared fixtures, configuration, and test utilities
-for all test levels (unit, integration, e2e).
+This module provides essential fixtures without external dependencies.
 """
 
 import os
@@ -11,15 +10,10 @@ import shutil
 import tempfile
 import subprocess
 from pathlib import Path
-from typing import Generator, Dict, Any, List
+from typing import Generator
 from unittest.mock import Mock, MagicMock
-import json
-import yaml
 
 import pytest
-import git
-from faker import Faker
-from freezegun import freeze_time
 
 # Add project root to path
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -28,9 +22,6 @@ sys.path.insert(0, str(PROJECT_ROOT))
 # Test data directory
 TEST_DATA_DIR = Path(__file__).parent / "fixtures" / "data"
 TEST_DATA_DIR.mkdir(parents=True, exist_ok=True)
-
-# Initialize faker
-fake = Faker()
 
 
 # ==================== Pytest Configuration ====================
@@ -79,7 +70,7 @@ def pytest_collection_modifyitems(config, items):
             item.add_marker(pytest.mark.security)
 
 
-# ==================== Directory and File Fixtures ====================
+# ==================== Basic Fixtures ====================
 
 @pytest.fixture
 def temp_dir() -> Generator[Path, None, None]:
@@ -89,35 +80,6 @@ def temp_dir() -> Generator[Path, None, None]:
     # Cleanup
     if temp_path.exists():
         shutil.rmtree(temp_path)
-
-
-@pytest.fixture
-def temp_git_repo(temp_dir: Path) -> Generator[git.Repo, None, None]:
-    """Create a temporary git repository for testing."""
-    # Change to temp directory to avoid path resolution issues
-    original_cwd = Path.cwd()
-    os.chdir(temp_dir)
-    
-    try:
-        repo = git.Repo.init(temp_dir)
-        
-        # Configure git user for commits
-        with repo.config_writer() as config:
-            config.set_value("user", "name", "Test User")
-            config.set_value("user", "email", "test@example.com")
-        
-        # Create initial commit using relative paths
-        readme_path = temp_dir / "README.md"
-        readme_path.write_text("# Test Repository\n")
-        
-        # Use subprocess for git operations to avoid GitPython path issues
-        subprocess.run(["git", "add", "README.md"], cwd=temp_dir, check=True)
-        subprocess.run(["git", "commit", "-m", "Initial commit"], cwd=temp_dir, check=True)
-        
-        yield repo
-    finally:
-        # Always return to original directory
-        os.chdir(original_cwd)
 
 
 @pytest.fixture
@@ -163,334 +125,140 @@ if __name__ == "__main__":
 def sample_javascript_file(temp_dir: Path) -> Path:
     """Create a sample messy JavaScript file for testing."""
     file_path = temp_dir / "messy_code.js"
-    content = '''// Messy JavaScript file
-const unused = require('unused-module');
-
-const DEBUG = true;
+    content = '''
+const fs = require('fs');
+const path = require('path');
+const unused = require('lodash');  // unused
 
 function calculateSum(a, b) {
-    console.log(`Debug: calculating ${a} + ${b}`); // debug statement
+    console.log(`Debug: calculating ${a} + ${b}`);  // debug statement
     const result = a + b;
-    console.log(`Debug: result is ${result}`); // debug statement
+    console.log(`Debug: result is ${result}`);  // debug statement
     return result;
 }
 
-function calcSum(x, y) { // duplicate function
+function calcSum(x, y) {  // duplicate function
     return x + y;
 }
 
 // TODO: Fix this later
 // FIXME: This is broken
 function brokenFunction() {
-    // Not implemented
+    
 }
 
-// Old code
-// function oldFunction() {
-//     return;
-// }
-
-console.log("Script loaded"); // debug
+if (require.main === module) {
+    console.log("Running main");  // debug
+    const result = calculateSum(1, 2);
+}
 '''
     file_path.write_text(content)
     return file_path
 
 
-# ==================== Configuration Fixtures ====================
-
 @pytest.fixture
-def cleanup_config() -> Dict[str, Any]:
-    """Provide default cleanup toolkit configuration."""
-    return {
-        "cleanup_mode": "prompt",
-        "skip_cleanup": False,
-        "ai_frameworks": {
-            "claude": {
-                "enabled": True,
-                "project_files": ["claude.md", "handover.md"]
-            },
-            "warp": {
-                "enabled": True,
-                "config_dir": ".warp"
-            },
-            "cursor": {
-                "enabled": False
-            }
-        },
-        "cleanup_rules": {
-            "remove_debug": True,
-            "remove_todos": True,
-            "consolidate_duplicates": True,
-            "add_documentation": True,
-            "check_security": True
-        },
-        "file_patterns": {
-            "python": ["*.py"],
-            "javascript": ["*.js", "*.jsx", "*.ts", "*.tsx"],
-            "go": ["*.go"],
-            "java": ["*.java"]
-        }
-    }
+def mock_subprocess():
+    """Mock subprocess for testing."""
+    mock_result = Mock()
+    mock_result.returncode = 0
+    mock_result.stdout = ""
+    mock_result.stderr = ""
+    return mock_result
 
 
 @pytest.fixture
-def config_file(temp_dir: Path, cleanup_config: Dict[str, Any]) -> Path:
-    """Create a temporary config file."""
-    config_path = temp_dir / ".cleanup-toolkit" / "config.yml"
-    config_path.parent.mkdir(parents=True, exist_ok=True)
+def mock_git_repo(temp_dir: Path):
+    """Mock git repository without requiring GitPython."""
+    # Create basic git structure
+    git_dir = temp_dir / ".git"
+    git_dir.mkdir()
     
-    with open(config_path, 'w') as f:
-        yaml.dump(cleanup_config, f)
+    # Create hooks directory
+    hooks_dir = git_dir / "hooks"
+    hooks_dir.mkdir()
     
-    return config_path
-
-
-# ==================== Mock Fixtures ====================
-
-@pytest.fixture
-def mock_git_operations():
-    """Mock git operations for testing."""
-    mock = MagicMock()
-    mock.get_staged_files.return_value = [
-        "src/main.py",
-        "src/utils.py",
-        "tests/test_main.py"
-    ]
-    mock.get_current_branch.return_value = "feature/test-branch"
-    mock.get_commit_message.return_value = "Add new feature"
-    mock.get_project_root.return_value = "/project/root"
-    return mock
-
-
-@pytest.fixture
-def mock_ai_framework():
-    """Mock AI framework interactions."""
-    mock = MagicMock()
-    mock.generate_prompts.return_value = {
-        "analysis": "Analyze the following files for cleanup...",
-        "execution": "Execute cleanup on the following issues...",
-        "verification": "Verify cleanup is complete..."
-    }
-    mock.process_cleanup.return_value = {
-        "status": "success",
-        "files_processed": 3,
-        "issues_found": 5,
-        "issues_fixed": 4
-    }
-    return mock
-
-
-@pytest.fixture
-def mock_subprocess(mocker):
-    """Mock subprocess calls for shell script testing."""
-    mock_run = mocker.patch('subprocess.run')
-    mock_run.return_value = MagicMock(
-        returncode=0,
-        stdout="Success",
-        stderr=""
-    )
-    return mock_run
-
-
-# ==================== Shell Script Testing Fixtures ====================
-
-@pytest.fixture
-def pre_commit_hook_path() -> Path:
-    """Get the path to the pre-commit hook."""
-    return PROJECT_ROOT / "hooks" / "pre-commit"
-
-
-@pytest.fixture
-def cleanup_script_path() -> Path:
-    """Get the path to the cleanup script."""
-    return PROJECT_ROOT / "scripts" / "code_cleanup_gist.sh"
-
-
-@pytest.fixture
-def shell_test_env(temp_dir: Path) -> Dict[str, str]:
-    """Create environment variables for shell script testing."""
+    # Create config file
+    config_file = git_dir / "config"
+    config_content = """[core]
+    repositoryformatversion = 0
+    filemode = true
+    bare = false
+    logallrefupdates = true
+[user]
+    name = Test User
+    email = test@example.com
+"""
+    config_file.write_text(config_content)
+    
     return {
-        "HOME": str(temp_dir),
-        "GIT_DIR": str(temp_dir / ".git"),
-        "GIT_WORK_TREE": str(temp_dir),
-        "CLEANUP_MODE": "test",
-        "SKIP_CLEANUP": "false",
-        "PATH": os.environ.get("PATH", "")
+        "path": temp_dir,
+        "git_dir": git_dir,
+        "hooks_dir": hooks_dir
     }
 
 
-# ==================== Test Data Fixtures ====================
+@pytest.fixture
+def project_root():
+    """Get the project root directory."""
+    return PROJECT_ROOT
+
 
 @pytest.fixture
-def sample_commit_data() -> Dict[str, Any]:
-    """Provide sample commit data for testing."""
+def cleanup_toolkit_files():
+    """Get paths to cleanup toolkit files."""
     return {
-        "message": "Fix: Remove debug statements and add documentation",
-        "author": "Test User <test@example.com>",
-        "files": [
-            {"path": "src/main.py", "additions": 10, "deletions": 5},
-            {"path": "src/utils.py", "additions": 20, "deletions": 15},
-            {"path": "tests/test_main.py", "additions": 50, "deletions": 0}
-        ],
-        "stats": {
-            "total": 3,
-            "additions": 80,
-            "deletions": 20
-        }
+        "pre_commit_hook": PROJECT_ROOT / "hooks" / "pre-commit",
+        "install_script": PROJECT_ROOT / "install.sh",
+        "cleanup_script": PROJECT_ROOT / "scripts" / "code_cleanup_gist.sh",
+        "test_runner": PROJECT_ROOT / "run_tests.py"
     }
 
 
-@pytest.fixture
-def sample_pr_data() -> Dict[str, Any]:
-    """Provide sample pull request data for testing."""
-    return {
-        "number": 42,
-        "title": "Feature: Add cleanup toolkit integration",
-        "body": "This PR adds cleanup toolkit integration...",
-        "head": "feature/cleanup-integration",
-        "base": "main",
-        "state": "open",
-        "files_changed": 5,
-        "additions": 150,
-        "deletions": 30
-    }
+# ==================== Test Utilities ====================
 
-
-@pytest.fixture
-def cleanup_issues() -> List[Dict[str, Any]]:
-    """Provide sample cleanup issues for testing."""
-    return [
-        {
-            "file": "src/main.py",
-            "line": 10,
-            "type": "debug_statement",
-            "severity": "medium",
-            "message": "Remove debug print statement"
-        },
-        {
-            "file": "src/utils.py",
-            "line": 25,
-            "type": "duplicate_function",
-            "severity": "high",
-            "message": "Duplicate function 'calculate_sum' found"
-        },
-        {
-            "file": "src/config.py",
-            "line": 5,
-            "type": "unused_import",
-            "severity": "low",
-            "message": "Unused import 'pandas'"
-        },
-        {
-            "file": "src/main.py",
-            "line": 45,
-            "type": "todo_comment",
-            "severity": "low",
-            "message": "TODO comment found"
-        },
-        {
-            "file": "src/auth.py",
-            "line": 15,
-            "type": "hardcoded_credential",
-            "severity": "critical",
-            "message": "Hardcoded password detected"
-        }
-    ]
-
-
-# ==================== Performance Testing Fixtures ====================
-
-@pytest.fixture
-def large_codebase(temp_dir: Path) -> Path:
-    """Create a large codebase for performance testing."""
-    # Create 100 Python files with various issues
-    for i in range(100):
-        file_path = temp_dir / f"module_{i}.py"
-        content = f'''# Module {i}
-import os
-import sys
-import unused_module_{i}
-
-def function_{i}(x, y):
-    print(f"Debug: function_{i} called")  # debug
-    return x + y
-
-def duplicate_function_{i}(x, y):  # duplicate
-    return x + y
-
-# TODO: Implement feature_{i}
-# FIXME: Bug in module_{i}
-'''
+def create_test_files(directory: Path, file_specs: dict) -> dict:
+    """
+    Create test files in the specified directory.
+    
+    Args:
+        directory: Directory to create files in
+        file_specs: Dict of {filename: content}
+    
+    Returns:
+        Dict of {filename: Path}
+    """
+    created_files = {}
+    for filename, content in file_specs.items():
+        file_path = directory / filename
         file_path.write_text(content)
-    
-    return temp_dir
+        created_files[filename] = file_path
+    return created_files
 
 
-# ==================== Utility Fixtures ====================
-
-@pytest.fixture
-def capture_output(mocker):
-    """Capture stdout and stderr for testing."""
-    stdout = mocker.patch('sys.stdout', new_callable=Mock)
-    stderr = mocker.patch('sys.stderr', new_callable=Mock)
-    return {"stdout": stdout, "stderr": stderr}
+def count_patterns(text: str, patterns: list) -> int:
+    """Count occurrences of patterns in text."""
+    count = 0
+    for pattern in patterns:
+        count += text.count(pattern)
+    return count
 
 
-@pytest.fixture
-def frozen_time():
-    """Freeze time for consistent testing."""
-    with freeze_time("2024-01-15 10:30:00"):
-        yield
+def simulate_git_add(repo_path: Path, files: list) -> bool:
+    """Simulate git add operation."""
+    try:
+        for file in files:
+            file_path = repo_path / file if isinstance(file, str) else file
+            if not file_path.exists():
+                return False
+        return True
+    except Exception:
+        return False
 
 
-@pytest.fixture
-def mock_network_requests(mocker):
-    """Mock network requests for testing."""
-    import requests
-    mock_get = mocker.patch.object(requests, 'get')
-    mock_post = mocker.patch.object(requests, 'post')
-    
-    mock_get.return_value.status_code = 200
-    mock_get.return_value.json.return_value = {"status": "success"}
-    
-    mock_post.return_value.status_code = 201
-    mock_post.return_value.json.return_value = {"id": 123}
-    
-    return {"get": mock_get, "post": mock_post}
-
-
-# ==================== Cleanup Context Fixtures ====================
-
-@pytest.fixture
-def cleanup_context(temp_dir: Path, sample_commit_data: Dict[str, Any]) -> Path:
-    """Create a cleanup context file for testing."""
-    context_dir = temp_dir / ".cleanup-toolkit"
-    context_dir.mkdir(parents=True, exist_ok=True)
-    
-    context_file = context_dir / "cleanup-context.md"
-    content = f'''# Cleanup Context
-
-## Project Information
-- Project: test-project
-- Branch: feature/test
-- Commit: {sample_commit_data["message"]}
-
-## Files Modified
-{chr(10).join(f"- {f['path']}" for f in sample_commit_data["files"])}
-
-## Cleanup Tasks
-- Remove debug statements
-- Consolidate duplicate functions
-- Add documentation
-'''
-    context_file.write_text(content)
-    return context_file
-
-
-@pytest.fixture(autouse=True)
-def reset_environment():
-    """Reset environment variables after each test."""
-    original_env = os.environ.copy()
-    yield
-    os.environ.clear()
-    os.environ.update(original_env)
+def simulate_git_commit(repo_path: Path, message: str) -> bool:
+    """Simulate git commit operation."""
+    try:
+        git_dir = repo_path / ".git"
+        return git_dir.exists()
+    except Exception:
+        return False
