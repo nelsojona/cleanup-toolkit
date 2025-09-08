@@ -41,8 +41,10 @@ class CleanupConfig:
     def is_excluded(self, file_path: str) -> bool:
         """Check if file should be excluded from cleanup."""
         path = Path(file_path)
+        # Convert to forward slashes for consistent matching
+        path_str = str(path).replace('\\', '/')
         for pattern in self.exclude_patterns:
-            if pattern in str(path):
+            if pattern in path_str:
                 return True
         return False
 
