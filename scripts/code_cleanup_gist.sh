@@ -1,10 +1,18 @@
 #!/bin/bash
 
-# Code Cleanup Gist Script
+# Code Cleanup Gist Script - STRICT ENFORCEMENT MODE
 # Based on the "Vibe coding tip" and community insights
 # Systematically clean up code after completing development goals
+# RULES: NO BYPASSING ALLOWED - Cleanup is MANDATORY
 
 set -e
+
+# Check for bypass attempts
+if [[ "$1" == "--skip" ]] || [[ "$1" == "--no-cleanup" ]] || [[ "$SKIP_CLEANUP" == "true" ]]; then
+    echo -e "\033[0;31m❌ ERROR: Cleanup cannot be skipped\033[0m"
+    echo -e "\033[0;31mCleanup is MANDATORY in this repository\033[0m"
+    exit 1
+fi
 
 # Colors for output
 RED='\033[0;31m'
