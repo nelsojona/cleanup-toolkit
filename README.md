@@ -3,8 +3,26 @@
 An **AI-powered code cleanup toolkit** that transforms "vibe-coding" into systematic, intelligent cleanup workflows. Instead of rigid programmatic cleanup, this toolkit **prompts AI frameworks** to perform context-aware code improvement.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/nelsojona/cleanup-toolkit)
+[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/nelsojona/cleanup-toolkit)
 [![AI-Powered](https://img.shields.io/badge/AI--Powered-Claude%20%7C%20Cursor%20%7C%20Roo%20%7C%20Codex%20%7C%20Warp-purple.svg)](https://github.com/nelsojona/cleanup-toolkit)
+
+## 🎉 What's New in v2.0
+
+### 🚫 **Strict Enforcement Mode**
+- **NO bypassing allowed** - `--no-verify` and `SKIP_CLEANUP` are disabled
+- **Mandatory cleanup** for all commits
+
+### 🧠 **Smart Edge Case Handling**
+- **Auto-skip generated files** - `*.min.js`, `dist/*`, compiled JS from TS
+- **Express cleanup path** - for minimal changes (≤2 files, ≤10 lines)
+- **Quick verification** - `bash scripts/quick-cleanup.sh`
+
+### 🐛 **Bug Fixes**
+- ✅ Fixed "date: illegal time format" error
+- ✅ Fixed Windows path compatibility
+- ✅ Improved CI/CD test coverage
+
+[See all updates →](docs/claude-code-updates.md)
 
 ## 🤖 The Agentic Approach
 
@@ -189,11 +207,14 @@ cat .cleanup-toolkit/shell-cleanup-guide.md
 ### Core Components
 
 #### 🪝 **Smart Pre-commit Hook** (`hooks/pre-commit`)
+- **Intelligent file detection** - automatically skips generated/compiled files
+- **Smart edge case handling** - detects minimal changes, hotfixes, and clean code
+- **Fixed date format bug** - no more "illegal time format" errors
+- **Strict enforcement mode** - NO bypassing allowed (--no-verify disabled)
 - Analyzes git staged changes using `git diff --cached`
 - Detects code quality issues (debug statements, TODOs, unused imports)
 - Generates AI-specific prompts for each framework
 - Creates contextual cleanup guidance
-- Supports skip conditions (`SKIP_CLEANUP`, `--no-verify`)
 
 #### 🧹 **Code Cleanup Script** (`scripts/code_cleanup_gist.sh`)
 - Standalone cleanup analysis tool
@@ -277,6 +298,35 @@ git add test.py
 git commit -m "test: cleanup toolkit"
 # Should trigger cleanup analysis and generate AI prompts
 ```
+
+## 🚫 Strict Enforcement Mode (NEW!)
+
+### No Bypassing Allowed
+- ❌ **`--no-verify` is DISABLED** - cleanup is mandatory
+- ❌ **`SKIP_CLEANUP` environment variable DISABLED** 
+- ✅ **All commits must pass cleanup standards**
+- ✅ **Automatic enforcement with no exceptions**
+
+### Smart Edge Case Handling
+The toolkit now intelligently handles real-world scenarios:
+
+#### Automatically Skipped Files
+- 📦 **Generated/Compiled Files**
+  - `*.min.js`, `*.bundle.js`, `dist/*`, `build/*`
+  - JavaScript files when TypeScript source exists
+  - Lock files (`package-lock.json`, `yarn.lock`)
+  - Auto-generated manifests
+
+#### Express Cleanup Path
+- ⚡ **Minimal Changes** (≤2 files, ≤10 lines)
+  - Quick verification available
+  - `git commit --cleanup-done -m 'message'`
+- ✅ **Already Clean Code**
+  - No debug statements found
+  - Fast-track completion
+- 🔧 **Quick Cleanup Script**
+  - `bash scripts/quick-cleanup.sh`
+  - Instant assessment and completion
 
 ## 📊 What Gets Cleaned
 
@@ -461,17 +511,25 @@ test -f claude.md && echo "✅ Ready" || echo "❌ Run install.sh"
 test -d .warp && echo "✅ Ready" || echo "❌ Run warp-init.sh"
 ```
 
-**Skip cleanup for specific commits:**
+**Handling Different Scenarios:**
 ```bash
-# Method 1: Environment variable
-SKIP_CLEANUP=true git commit -m "wip: work in progress"
+# For minimal changes (automatically detected)
+git commit -m "fix: typo"  # Hook detects minimal change
 
-# Method 2: Commit message marker
-git commit -m "feat: new feature SKIP_CLEANUP"
+# For already-clean code
+bash scripts/quick-cleanup.sh  # Quick verification
+git commit --cleanup-done -m "fix: your message"
 
-# Method 3: No-verify flag
-git commit --no-verify -m "emergency fix"
+# For generated/compiled files (automatically skipped)
+git commit -m "build: update compiled assets"
+
+# Emergency situations (cleanup still required!)
+# Fix the issues first, then commit normally
+git add .
+git commit -m "hotfix: critical fix"
 ```
+
+**Note:** Bypassing cleanup is NO LONGER ALLOWED. The `--no-verify` flag and `SKIP_CLEANUP` environment variable are disabled.
 
 ## 📖 Documentation
 
@@ -479,6 +537,7 @@ git commit --no-verify -m "emergency fix"
 - [Quick Start Guide](docs/quick-start.md)
 - [Configuration Reference](docs/configuration.md)
 - [Contributing Guidelines](CONTRIBUTING.md)
+- **[🆕 Latest Updates & Fixes](docs/claude-code-updates.md)** - Edge cases, enforcement, bug fixes
 
 ### AI Framework Guides
 - [OpenAI Codex Integration](docs/codex-integration.md)
